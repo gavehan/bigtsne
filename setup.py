@@ -215,9 +215,9 @@ class CythonBuildExt(build_ext):
 extra_compile_args = []
 extra_link_args = []
 
-annoy_path = "openTSNE/dependencies/annoy/"
+annoy_path = "bigtsne/dependencies/annoy/"
 annoy = Extension(
-    "openTSNE.dependencies.annoy.annoylib",
+    "bigtsne.dependencies.annoy.annoylib",
     [annoy_path + "annoymodule.cc"],
     depends=[annoy_path + f for f in ["annoylib.h", "kissrandom.h", "mman.h"]],
     language="c++",
@@ -227,9 +227,9 @@ annoy = Extension(
 
 # Other extensions
 extensions = [
-    Extension("openTSNE.quad_tree", ["openTSNE/quad_tree.pyx"], language="c++"),
-    Extension("openTSNE._tsne", ["openTSNE/_tsne.pyx"], language="c++"),
-    Extension("openTSNE.kl_divergence", ["openTSNE/kl_divergence.pyx"], language="c++"),
+    Extension("bigtsne.quad_tree", ["bigtsne/quad_tree.pyx"], language="c++"),
+    Extension("bigtsne._tsne", ["bigtsne/_tsne.pyx"], language="c++"),
+    Extension("bigtsne.kl_divergence", ["bigtsne/kl_divergence.pyx"], language="c++"),
     annoy,
 ]
 
@@ -238,8 +238,8 @@ extensions = [
 if has_c_library("fftw3"):
     print("FFTW3 header files found. Using FFTW implementation of FFT.")
     extension_ = Extension(
-        "openTSNE._matrix_mul.matrix_mul",
-        ["openTSNE/_matrix_mul/matrix_mul_fftw3.pyx"],
+        "bigtsne._matrix_mul.matrix_mul",
+        ["bigtsne/_matrix_mul/matrix_mul_fftw3.pyx"],
         libraries=["fftw3"],
         language="c++",
     )
@@ -247,8 +247,8 @@ if has_c_library("fftw3"):
 else:
     print("FFTW3 header files not found. Using numpy implementation of FFT.")
     extension_ = Extension(
-        "openTSNE._matrix_mul.matrix_mul",
-        ["openTSNE/_matrix_mul/matrix_mul_numpy.pyx"],
+        "bigtsne._matrix_mul.matrix_mul",
+        ["bigtsne/_matrix_mul/matrix_mul_numpy.pyx"],
         language="c++",
     )
     extensions.append(extension_)
@@ -267,22 +267,22 @@ def readme():
 
 # Read in version
 __version__: str = ""  # This is overridden by the next line
-exec(open(os.path.join("openTSNE", "version.py")).read())
+exec(open(os.path.join("bigtsne", "version.py")).read())
 
 setup(
-    name="openTSNE",
+    name="bigtsne",
     description="Extensible, parallel implementations of t-SNE",
     long_description=readme(),
     version=__version__,
     license="BSD-3-Clause",
 
-    author="Pavlin Poličar",
-    author_email="pavlin.g.p@gmail.com",
-    url="https://github.com/pavlin-policar/openTSNE",
+    author="Pavlin Poličar, Junhan Kim",
+    author_email="pavlin.g.p@gmail.com, junkim779@yonsei.ac.kr",
+    url="https://github.com/gavehan/bigtsne",
     project_urls={
         "Documentation": "https://opentsne.readthedocs.io/",
-        "Source": "https://github.com/pavlin-policar/openTSNE",
-        "Issue Tracker": "https://github.com/pavlin-policar/openTSNE/issues",
+        "Source": "https://github.com/gavehan/bigtsne",
+        "Issue Tracker": "https://github.com/gavehan/bigtsne/issues",
     },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -301,7 +301,7 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
 
-    packages=setuptools.find_packages(include=["openTSNE", "openTSNE.*"]),
+    packages=setuptools.find_packages(include=["bigtsne", "bigtsne.*"]),
     python_requires=">=3.6",
     install_requires=[
         "numpy>=1.16.6",
