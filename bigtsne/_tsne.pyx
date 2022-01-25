@@ -14,23 +14,23 @@ from .quad_tree cimport QuadTree, Node, is_duplicate
 from ._matrix_mul.matrix_mul cimport matrix_multiply_fft_1d, matrix_multiply_fft_2d
 
 
-cdef double EPSILON = np.finfo(np.float64).eps
+cdef float EPSILON = np.finfo(np.single).eps
 
 
 cdef extern from "math.h":
-    double sqrt(double x) nogil
-    double log(double x) nogil
-    double exp(double x) nogil
-    double fabs(double x) nogil
-    double fmax(double x, double y) nogil
-    double isinf(long double) nogil
-    double INFINITY
+    float sqrt(float x) nogil
+    float log(float x) nogil
+    float exp(float x) nogil
+    float fabs(float x) nogil
+    float fmax(float x, float y) nogil
+    float isinf(long float) nogil
+    float INFINITY
 
 
-cpdef double[:, ::1] compute_gaussian_perplexity(
-    double[:, :] distances,
-    double[:] desired_perplexities,
-    double perplexity_tol=1e-8,
+cpdef float[:, ::1] compute_gaussian_perplexity(
+    float[:, :] distances,
+    float[:] desired_perplexities,
+    float perplexity_tol=1e-8,
     Py_ssize_t max_iter=200,
     Py_ssize_t num_threads=1,
 ):
@@ -38,14 +38,14 @@ cpdef double[:, ::1] compute_gaussian_perplexity(
         Py_ssize_t n_samples = distances.shape[0]
         Py_ssize_t n_scales = desired_perplexities.shape[0]
         Py_ssize_t k_neighbors = distances.shape[1]
-        double[:, ::1] P = np.zeros_like(distances, dtype=float, order="C")
-        double[:, :, ::1] multiscale_P = np.zeros((n_samples, n_scales, k_neighbors))
-        double[:, ::1] tau = np.ones((n_samples, n_scales))
+        float[:, ::1] P = np.zeros_like(distances, dtype=np.single, order="C")
+        float[:, :, ::1] multiscale_P = np.zeros((n_samples, n_scales, k_neighbors))
+        float[:, ::1] tau = np.ones((n_samples, n_scales))
 
         Py_ssize_t i, j, h, iteration
-        double[:] desired_entropies = np.log(desired_perplexities)
+        float[:] desired_entropies = np.log(desired_perplexities)
 
-        double min_tau, max_tau, sum_Pi, sum_PiDj, entropy, entropy_diff, sqrt_tau
+        float min_tau, max_tau, sum_Pi, sum_PiDj, entropy, entropy_diff, sqrt_tau
 
     if num_threads < 1:
         num_threads = 1
@@ -103,19 +103,19 @@ cpdef double[:, ::1] compute_gaussian_perplexity(
 cpdef tuple estimate_positive_gradient_nn(
     sparse_index_type[:] indices,
     sparse_index_type[:] indptr,
-    double[:] P_data,
-    double[:, ::1] embedding,
-    double[:, ::1] reference_embedding,
-    double[:, ::1] gradient,
-    double dof=1,
+    float[:] P_data,
+    float[:, ::1] embedding,
+    float[:, ::1] reference_embedding,
+    float[:, ::1] gradient,
+    float dof=1,
     Py_ssize_t num_threads=1,
     bint should_eval_error=False,
 ):
     cdef:
         Py_ssize_t n_samples = gradient.shape[0]
         Py_ssize_t n_dims = gradient.shape[1]
-        double * diff
-        double d_ij, p_ij, q_ij, kl_divergence = 0, sum_P = 0
+        float * diff
+        float d_ij, p_ij, q_ij, kl_divergence = 0, sum_P = 0
 
         Py_ssize_t i, j, k, d
 
@@ -129,7 +129,7 @@ cpdef tuple estimate_positive_gradient_nn(
     with nogil, parallel(num_threads=num_threads):
         # Use `malloc` here instead of `PyMem_Malloc` because we're in a
         # `nogil` clause and we won't be allocating much memory
-        diff = <double *>malloc(n_dims * sizeof(double))
+        diff = <float *>malloc(n_dims * sizeof(float))
         if not diff:
             with gil:
                 raise MemoryError()
@@ -169,12 +169,12 @@ cpdef tuple estimate_positive_gradient_nn(
     return sum_P, kl_divergence
 
 
-cpdef double estimate_negative_gradient_bh(
+cpdef float estimate_negative_gradient_bh(
     QuadTree tree,
-    double[:, ::1] embedding,
-    double[:, ::1] gradient,
-    double theta=0.5,
-    double dof=1,
+    float[:, ::1] embedding,
+    float[:, ::1] gradient,
+    float theta=0.5,
+    float dof=1,
     Py_ssize_t num_threads=1,
     bint pairwise_normalization=True,
 ):
@@ -190,8 +190,8 @@ cpdef double estimate_negative_gradient_bh(
     """
     cdef:
         Py_ssize_t i, j, num_points = embedding.shape[0]
-        double sum_Q = 0
-        double[::1] sum_Qi = np.zeros(num_points, dtype=float)
+        float sum_Q = 0
+        float[::1] sum_Qi = np.zeros(num_points, dtype=np.single)
 
     if num_threads < 1:
         num_threads = 1
@@ -219,19 +219,19 @@ cpdef double estimate_negative_gradient_bh(
 
 cdef void _estimate_negative_gradient_single(
     Node * node,
-    double * point,
-    double * gradient,
-    double * sum_Q,
-    double theta,
-    double dof,
+    float * point,
+    float * gradient,
+    float * sum_Q,
+    float theta,
+    float dof,
 ) nogil:
     # Make sure that we spend no time on empty nodes or self-interactions
     if node.num_points == 0 or node.is_leaf and is_duplicate(node, point):
         return
 
     cdef:
-        double distance = EPSILON
-        double q_ij, tmp
+        float distance = EPSILON
+        float q_ij, tmp
         Py_ssize_t d
 
     # Compute the squared euclidean disstance in the embedding space from the
@@ -270,41 +270,41 @@ cdef void _estimate_negative_gradient_single(
         _estimate_negative_gradient_single(&node.children[d], point, gradient, sum_Q, theta, dof)
 
 
-cdef inline double cauchy_1d(double x, double y, double dof) nogil:
+cdef inline float cauchy_1d(float x, float y, float dof) nogil:
     if dof != 1:
         return (1 + ((x - y) ** 2) / dof) ** -dof
     else:
         return (1 + (x - y) ** 2) ** -1
 
 
-cdef inline double cauchy_1d_exp1p(double x, double y, double dof) nogil:
+cdef inline float cauchy_1d_exp1p(float x, float y, float dof) nogil:
     if dof != 1:
         return (1 + ((x - y) ** 2) / dof) ** -(dof + 1)
     else:
         return (1 + (x - y) ** 2) ** -2
 
 
-cdef inline double cauchy_2d(double x1, double x2, double y1, double y2, double dof) nogil:
+cdef inline float cauchy_2d(float x1, float x2, float y1, float y2, float dof) nogil:
     if dof != 1:
         return (1 + ((x1 - y1) ** 2 + (x2 - y2) ** 2) / dof) ** -dof
     else:
         return (1 + (x1 - y1) ** 2 + (x2 - y2) ** 2) ** -1
 
 
-cdef inline double cauchy_2d_exp1p(double x1, double x2, double y1, double y2, double dof) nogil:
+cdef inline float cauchy_2d_exp1p(float x1, float x2, float y1, float y2, float dof) nogil:
     if dof != 1:
         return (1 + ((x1 - y1) ** 2 + (x2 - y2) ** 2) / dof) ** -(dof + 1)
     else:
         return (1 + (x1 - y1) ** 2 + (x2 - y2) ** 2) ** -2
 
 
-cdef double[:, ::1] interpolate(double[::1] y_in_box, double[::1] y_tilde):
+cdef float[:, ::1] interpolate(float[::1] y_in_box, float[::1] y_tilde):
     """Lagrangian polynomial interpolation."""
     cdef Py_ssize_t N = y_in_box.shape[0]
     cdef Py_ssize_t n_interpolation_points = y_tilde.shape[0]
 
-    cdef double[:, ::1] interpolated_values = np.empty((N, n_interpolation_points), dtype=float)
-    cdef double[::1] denominator = np.empty(n_interpolation_points, dtype=float)
+    cdef float[:, ::1] interpolated_values = np.empty((N, n_interpolation_points), dtype=np.single)
+    cdef float[::1] denominator = np.empty(n_interpolation_points, dtype=np.single)
     cdef Py_ssize_t i, j, k
 
     for i in range(n_interpolation_points):
@@ -324,18 +324,18 @@ cdef double[:, ::1] interpolate(double[::1] y_in_box, double[::1] y_tilde):
     return interpolated_values
 
 
-cdef double[::1] compute_kernel_tilde_1d(
-    double (*kernel)(double, double, double),
+cdef float[::1] compute_kernel_tilde_1d(
+    float (*kernel)(float, float, float),
     Py_ssize_t n_interpolation_points_1d,
-    double coord_min,
-    double coord_spacing,
-    double dof,
+    float coord_min,
+    float coord_spacing,
+    float dof,
 ):
     cdef:
-        double[::1] y_tilde = np.empty(n_interpolation_points_1d, dtype=float)
+        float[::1] y_tilde = np.empty(n_interpolation_points_1d, dtype=np.single)
 
         Py_ssize_t embedded_size = 2 * n_interpolation_points_1d
-        double[::1] kernel_tilde = np.zeros(embedded_size, dtype=float)
+        float[::1] kernel_tilde = np.zeros(embedded_size, dtype=np.single)
 
         Py_ssize_t i
 
@@ -345,7 +345,7 @@ cdef double[::1] compute_kernel_tilde_1d(
 
     # Evaluate the kernel at the interpolation nodes and form the embedded
     # generating kernel vector for a circulant matrix
-    cdef double tmp
+    cdef float tmp
     for i in range(n_interpolation_points_1d):
         tmp = kernel(y_tilde[0], y_tilde[i], dof)
 
@@ -355,16 +355,16 @@ cdef double[::1] compute_kernel_tilde_1d(
     return kernel_tilde
 
 
-cpdef double estimate_negative_gradient_fft_1d(
-    double[::1] embedding,
-    double[::1] gradient,
+cpdef float estimate_negative_gradient_fft_1d(
+    float[::1] embedding,
+    float[::1] gradient,
     Py_ssize_t n_interpolation_points=3,
     Py_ssize_t min_num_intervals=10,
-    double ints_in_interval=1,
-    double dof=1,
+    float ints_in_interval=1,
+    float dof=1,
 ):
     cdef Py_ssize_t i, j, d, box_idx, n_samples = embedding.shape[0]
-    cdef double y_max = -INFINITY, y_min = INFINITY
+    cdef float y_max = -INFINITY, y_min = INFINITY
     # Determine the min/max values of the embedding
     for i in range(n_samples):
         if embedding[i] < y_min:
@@ -397,11 +397,11 @@ cpdef double estimate_negative_gradient_fft_1d(
     else:
         n_boxes = 1000
 
-    cdef double box_width = (y_max - y_min) / n_boxes
+    cdef float box_width = (y_max - y_min) / n_boxes
 
     # Compute the box bounds
-    cdef double[::1] box_lower_bounds = np.empty(n_boxes, dtype=float)
-    cdef double[::1] box_upper_bounds = np.empty(n_boxes, dtype=float)
+    cdef float[::1] box_lower_bounds = np.empty(n_boxes, dtype=np.single)
+    cdef float[::1] box_upper_bounds = np.empty(n_boxes, dtype=np.single)
     for box_idx in range(n_boxes):
         box_lower_bounds[box_idx] = box_idx * box_width + y_min
         box_upper_bounds[box_idx] = (box_idx + 1) * box_width + y_min
@@ -420,18 +420,18 @@ cpdef double estimate_negative_gradient_fft_1d(
     cdef int n_interpolation_points_1d = n_interpolation_points * n_boxes
     # Prepare the interpolants for a single interval, so we can use their
     # relative positions later on
-    cdef double[::1] y_tilde = np.empty(n_interpolation_points, dtype=float)
-    cdef double h = 1. / n_interpolation_points
+    cdef float[::1] y_tilde = np.empty(n_interpolation_points, dtype=np.single)
+    cdef float h = 1. / n_interpolation_points
     y_tilde[0] = h / 2
     for i in range(1, n_interpolation_points):
         y_tilde[i] = y_tilde[i - 1] + h
 
     # Evaluate the the squared cauchy kernel at the interpolation nodes
-    cdef double[::1] sq_kernel_tilde = compute_kernel_tilde_1d(
+    cdef float[::1] sq_kernel_tilde = compute_kernel_tilde_1d(
         &cauchy_1d_exp1p, n_interpolation_points_1d, y_min, h * box_width, dof
     )
     # The non-square cauchy kernel is only used if dof != 1, so don't do unnecessary work
-    cdef double[::1] kernel_tilde
+    cdef float[::1] kernel_tilde
     if dof != 1:
         kernel_tilde = compute_kernel_tilde_1d(
             &cauchy_1d, n_interpolation_points_1d, y_min, h * box_width, dof
@@ -440,7 +440,7 @@ cpdef double estimate_negative_gradient_fft_1d(
     # STEP 1: Compute the w coefficients
     # Set up q_j values
     cdef int n_terms = 3
-    cdef double[:, ::1] q_j = np.empty((n_samples, n_terms), dtype=float)
+    cdef float[:, ::1] q_j = np.empty((n_samples, n_terms), dtype=np.single)
     if dof != 1:
         for i in range(n_samples):
             q_j[i, 0] = 1
@@ -453,16 +453,16 @@ cpdef double estimate_negative_gradient_fft_1d(
             q_j[i, 2] = embedding[i] ** 2
 
     # Compute the relative position of each reference point in its box
-    cdef double[::1] y_in_box = np.empty(n_samples, dtype=float)
+    cdef float[::1] y_in_box = np.empty(n_samples, dtype=np.single)
     for i in range(n_samples):
         box_idx = point_box_idx[i]
         y_in_box[i] = (embedding[i] - box_lower_bounds[box_idx]) / box_width
 
     # Interpolate kernel using Lagrange polynomials
-    cdef double[:, ::1] interpolated_values = interpolate(y_in_box, y_tilde)
+    cdef float[:, ::1] interpolated_values = interpolate(y_in_box, y_tilde)
 
     # Actually compute w_{ij}s
-    cdef double[:, ::1] w_coefficients = np.zeros((n_interpolation_points_1d, n_terms), dtype=float)
+    cdef float[:, ::1] w_coefficients = np.zeros((n_interpolation_points_1d, n_terms), dtype=np.single)
     for i in range(n_samples):
         box_idx = point_box_idx[i] * n_interpolation_points
         for j in range(n_interpolation_points):
@@ -470,7 +470,7 @@ cpdef double estimate_negative_gradient_fft_1d(
                 w_coefficients[box_idx + j, d] += interpolated_values[i, j] * q_j[i, d]
 
     # STEP 2: Compute the kernel values evaluated at the interpolation nodes
-    cdef double[:, ::1] y_tilde_values = np.empty((n_interpolation_points_1d, n_terms))
+    cdef float[:, ::1] y_tilde_values = np.empty((n_interpolation_points_1d, n_terms))
     if dof != 1:
         matrix_multiply_fft_1d(sq_kernel_tilde, w_coefficients[:, :2], y_tilde_values[:, :2])
         matrix_multiply_fft_1d(kernel_tilde, w_coefficients[:, 2:], y_tilde_values[:, 2:])
@@ -479,7 +479,7 @@ cpdef double estimate_negative_gradient_fft_1d(
 
 
     # STEP 3: Compute the potentials \tilde{\phi(y_i)}
-    cdef double[:, ::1] phi = np.zeros((n_samples, n_terms), dtype=float)
+    cdef float[:, ::1] phi = np.zeros((n_samples, n_terms), dtype=np.single)
     for i in range(n_samples):
         box_idx = point_box_idx[i] * n_interpolation_points
         for j in range(n_interpolation_points):
@@ -489,7 +489,7 @@ cpdef double estimate_negative_gradient_fft_1d(
     PyMem_Free(point_box_idx)
 
     # Compute the normalization term Z or sum of q_{ij}s
-    cdef double sum_Q = 0
+    cdef float sum_Q = 0
     if dof != 1:
         for i in range(n_samples):
             sum_Q += phi[i, 2]
@@ -509,18 +509,18 @@ cpdef double estimate_negative_gradient_fft_1d(
 
 
 cpdef tuple prepare_negative_gradient_fft_interpolation_grid_1d(
-    double[::1] reference_embedding,
+    float[::1] reference_embedding,
     Py_ssize_t n_interpolation_points=3,
     Py_ssize_t min_num_intervals=10,
-    double ints_in_interval=1,
-    double dof=1,
-    double padding=0,
+    float ints_in_interval=1,
+    float dof=1,
+    float padding=0,
 ):
     cdef:
         Py_ssize_t i, j, d, box_idx
         Py_ssize_t n_reference_samples = reference_embedding.shape[0]
 
-        double y_max = -INFINITY, y_min = INFINITY
+        float y_max = -INFINITY, y_min = INFINITY
     # Determine the min/max values of the embedding
     # First, check the existing embedding
     for i in range(n_reference_samples):
@@ -541,11 +541,11 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_1d(
     y_max *= 1 + padding
 
     cdef int n_boxes = <int>fmax(min_num_intervals, (y_max - y_min) / ints_in_interval)
-    cdef double box_width = (y_max - y_min) / n_boxes
+    cdef float box_width = (y_max - y_min) / n_boxes
 
     # Compute the box bounds
-    cdef double[::1] box_lower_bounds = np.empty(n_boxes, dtype=float)
-    cdef double[::1] box_upper_bounds = np.empty(n_boxes, dtype=float)
+    cdef float[::1] box_lower_bounds = np.empty(n_boxes, dtype=np.single)
+    cdef float[::1] box_upper_bounds = np.empty(n_boxes, dtype=np.single)
     for box_idx in range(n_boxes):
         box_lower_bounds[box_idx] = box_idx * box_width + y_min
         box_upper_bounds[box_idx] = (box_idx + 1) * box_width + y_min
@@ -564,18 +564,18 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_1d(
     cdef int n_interpolation_points_1d = n_interpolation_points * n_boxes
     # Prepare the interpolants for a single interval, so we can use their
     # relative positions later on
-    cdef double[::1] y_tilde = np.empty(n_interpolation_points, dtype=float)
-    cdef double h = 1. / n_interpolation_points
+    cdef float[::1] y_tilde = np.empty(n_interpolation_points, dtype=np.single)
+    cdef float h = 1. / n_interpolation_points
     y_tilde[0] = h / 2
     for i in range(1, n_interpolation_points):
         y_tilde[i] = y_tilde[i - 1] + h
 
     # Evaluate the the squared cauchy kernel at the interpolation nodes
-    cdef double[::1] sq_kernel_tilde = compute_kernel_tilde_1d(
+    cdef float[::1] sq_kernel_tilde = compute_kernel_tilde_1d(
         &cauchy_1d_exp1p, n_interpolation_points_1d, y_min, h * box_width, dof
     )
     # The non-square cauchy kernel is only used if dof != 1, so don't do unnecessary work
-    cdef double[::1] kernel_tilde
+    cdef float[::1] kernel_tilde
     if dof != 1:
         kernel_tilde = compute_kernel_tilde_1d(
             &cauchy_1d, n_interpolation_points_1d, y_min, h * box_width, dof
@@ -584,7 +584,7 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_1d(
     # STEP 1: Compute the w coefficients
     # Set up q_j values
     cdef int n_terms = 3
-    cdef double[:, ::1] q_j = np.empty((n_reference_samples, n_terms), dtype=float)
+    cdef float[:, ::1] q_j = np.empty((n_reference_samples, n_terms), dtype=np.single)
     if dof != 1:
         for i in range(n_reference_samples):
             q_j[i, 0] = 1
@@ -597,16 +597,16 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_1d(
             q_j[i, 2] = reference_embedding[i] ** 2
 
     # Compute the relative position of each reference point in its box
-    cdef double[::1] reference_y_in_box = np.empty(n_reference_samples, dtype=float)
+    cdef float[::1] reference_y_in_box = np.empty(n_reference_samples, dtype=np.single)
     for i in range(n_reference_samples):
         box_idx = reference_point_box_idx[i]
         reference_y_in_box[i] = (reference_embedding[i] - box_lower_bounds[box_idx]) / box_width
 
     # Interpolate kernel using Lagrange polynomials
-    cdef double[:, ::1] reference_interpolated_values = interpolate(reference_y_in_box, y_tilde)
+    cdef float[:, ::1] reference_interpolated_values = interpolate(reference_y_in_box, y_tilde)
 
     # Actually compute w_{ij}s
-    cdef double[:, ::1] w_coefficients = np.zeros((n_interpolation_points_1d, n_terms), dtype=float)
+    cdef float[:, ::1] w_coefficients = np.zeros((n_interpolation_points_1d, n_terms), dtype=np.single)
     for i in range(n_reference_samples):
         box_idx = reference_point_box_idx[i] * n_interpolation_points
         for j in range(n_interpolation_points):
@@ -614,7 +614,7 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_1d(
                 w_coefficients[box_idx + j, d] += reference_interpolated_values[i, j] * q_j[i, d]
 
     # STEP 2: Compute the kernel values evaluated at the interpolation nodes
-    cdef double[:, ::1] y_tilde_values = np.empty((n_interpolation_points_1d, n_terms))
+    cdef float[:, ::1] y_tilde_values = np.empty((n_interpolation_points_1d, n_terms))
     if dof != 1:
         matrix_multiply_fft_1d(sq_kernel_tilde, w_coefficients[:, :2], y_tilde_values[:, :2])
         matrix_multiply_fft_1d(kernel_tilde, w_coefficients[:, 2:], y_tilde_values[:, 2:])
@@ -626,21 +626,21 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_1d(
     return np.asarray(y_tilde_values), np.asarray(box_lower_bounds)
 
 
-cpdef double estimate_negative_gradient_fft_1d_with_grid(
-    double[::1] embedding,
-    double[::1] gradient,
-    double[:, ::1] y_tilde_values,
-    double[::1] box_lower_bounds,
+cpdef float estimate_negative_gradient_fft_1d_with_grid(
+    float[::1] embedding,
+    float[::1] gradient,
+    float[:, ::1] y_tilde_values,
+    float[::1] box_lower_bounds,
     Py_ssize_t n_interpolation_points,
-    double dof,
+    float dof,
 ):
     cdef:
         Py_ssize_t i, j, d, box_idx
         Py_ssize_t n_samples = embedding.shape[0]
         Py_ssize_t n_terms = y_tilde_values.shape[1]
         Py_ssize_t n_boxes = box_lower_bounds.shape[0]
-        double y_min = box_lower_bounds[0]
-        double box_width = box_lower_bounds[1] - box_lower_bounds[0]
+        float y_min = box_lower_bounds[0]
+        float box_width = box_lower_bounds[1] - box_lower_bounds[0]
 
     # Determine which box each point belongs to
     cdef int *point_box_idx = <int *>PyMem_Malloc(n_samples * sizeof(int))
@@ -655,24 +655,24 @@ cpdef double estimate_negative_gradient_fft_1d_with_grid(
 
     # Prepare the interpolants for a single interval, so we can use their
     # relative positions later on
-    cdef double[::1] y_tilde = np.empty(n_interpolation_points, dtype=float)
-    cdef double h = 1. / n_interpolation_points
+    cdef float[::1] y_tilde = np.empty(n_interpolation_points, dtype=np.single)
+    cdef float h = 1. / n_interpolation_points
     y_tilde[0] = h / 2
     for i in range(1, n_interpolation_points):
         y_tilde[i] = y_tilde[i - 1] + h
 
     # STEP 3: Compute the potentials \tilde{\phi(y_i)}
     # Compute the relative position of each new embedding point in its box
-    cdef double[::1] y_in_box = np.empty(n_samples, dtype=float)
+    cdef float[::1] y_in_box = np.empty(n_samples, dtype=np.single)
     for i in range(n_samples):
         box_idx = point_box_idx[i]
         y_in_box[i] = (embedding[i] - box_lower_bounds[box_idx]) / box_width
 
     # Interpolate kernel using Lagrange polynomials
-    cdef double[:, ::1] interpolated_values = interpolate(y_in_box, y_tilde)
+    cdef float[:, ::1] interpolated_values = interpolate(y_in_box, y_tilde)
 
     # Actually compute \tilde{\phi(y_i)}
-    cdef double[:, ::1] phi = np.zeros((n_samples, n_terms), dtype=float)
+    cdef float[:, ::1] phi = np.zeros((n_samples, n_terms), dtype=np.single)
     for i in range(n_samples):
         box_idx = point_box_idx[i] * n_interpolation_points
         for j in range(n_interpolation_points):
@@ -682,7 +682,7 @@ cpdef double estimate_negative_gradient_fft_1d_with_grid(
     PyMem_Free(point_box_idx)
 
     # Compute the normalization term Z or sum of q_{ij}s
-    cdef double[::1] sum_Qi = np.empty(n_samples, dtype=float)
+    cdef float[::1] sum_Qi = np.empty(n_samples, dtype=np.single)
     if dof != 1:
         for i in range(n_samples):
             sum_Qi[i] = phi[i, 2]
@@ -692,7 +692,7 @@ cpdef double estimate_negative_gradient_fft_1d_with_grid(
                          2 * embedding[i] * phi[i, 1] + \
                          phi[i, 2]
 
-    cdef double sum_Q = 0
+    cdef float sum_Q = 0
     for i in range(n_samples):
         sum_Q += sum_Qi[i]
 
@@ -703,19 +703,19 @@ cpdef double estimate_negative_gradient_fft_1d_with_grid(
     return sum_Q
 
 
-cdef double[:, ::1] compute_kernel_tilde_2d(
-    double (*kernel)(double, double, double, double, double),
+cdef float[:, ::1] compute_kernel_tilde_2d(
+    float (*kernel)(float, float, float, float, float),
     Py_ssize_t n_interpolation_points_1d,
-    double coord_min,
-    double coord_spacing,
-    double dof,
+    float coord_min,
+    float coord_spacing,
+    float dof,
 ):
     cdef:
-        double[::1] y_tilde = np.empty(n_interpolation_points_1d, dtype=float)
-        double[::1] x_tilde = np.empty(n_interpolation_points_1d, dtype=float)
+        float[::1] y_tilde = np.empty(n_interpolation_points_1d, dtype=np.single)
+        float[::1] x_tilde = np.empty(n_interpolation_points_1d, dtype=np.single)
 
         Py_ssize_t embedded_size = 2 * n_interpolation_points_1d
-        double[:, ::1] kernel_tilde = np.zeros((embedded_size, embedded_size), dtype=float)
+        float[:, ::1] kernel_tilde = np.zeros((embedded_size, embedded_size), dtype=np.single)
 
         Py_ssize_t i, j
 
@@ -727,7 +727,7 @@ cdef double[:, ::1] compute_kernel_tilde_2d(
 
     # Evaluate the kernel at the interpolation nodes and form the embedded
     # generating kernel vector for a circulant matrix
-    cdef double tmp
+    cdef float tmp
     for i in range(n_interpolation_points_1d):
         for j in range(n_interpolation_points_1d):
             tmp = kernel(y_tilde[0], x_tilde[0], y_tilde[i], x_tilde[j], dof)
@@ -740,20 +740,20 @@ cdef double[:, ::1] compute_kernel_tilde_2d(
     return kernel_tilde
 
 
-cpdef double estimate_negative_gradient_fft_2d(
-    double[:, ::1] embedding,
-    double[:, ::1] gradient,
+cpdef float estimate_negative_gradient_fft_2d(
+    float[:, ::1] embedding,
+    float[:, ::1] gradient,
     Py_ssize_t n_interpolation_points=3,
     Py_ssize_t min_num_intervals=10,
-    double ints_in_interval=1,
-    double dof=1,
+    float ints_in_interval=1,
+    float dof=1,
 ):
     cdef:
         Py_ssize_t i, j, d, box_idx
         Py_ssize_t n_samples = embedding.shape[0]
         Py_ssize_t n_dims = embedding.shape[1]
 
-        double coord_max = -INFINITY, coord_min = INFINITY
+        float coord_max = -INFINITY, coord_min = INFINITY
     # Determine the min/max values of the embedding
     for i in range(n_samples):
         if embedding[i, 0] < coord_min:
@@ -791,14 +791,14 @@ cpdef double estimate_negative_gradient_fft_2d(
         n_boxes_1d = 1000 
 
     cdef int n_total_boxes = n_boxes_1d ** 2
-    cdef double box_width = (coord_max - coord_min) / n_boxes_1d
+    cdef float box_width = (coord_max - coord_min) / n_boxes_1d
 
     # Compute the box bounds
     cdef:
-        double[::1] box_x_lower_bounds = np.empty(n_total_boxes, dtype=float)
-        double[::1] box_x_upper_bounds = np.empty(n_total_boxes, dtype=float)
-        double[::1] box_y_lower_bounds = np.empty(n_total_boxes, dtype=float)
-        double[::1] box_y_upper_bounds = np.empty(n_total_boxes, dtype=float)
+        float[::1] box_x_lower_bounds = np.empty(n_total_boxes, dtype=np.single)
+        float[::1] box_x_upper_bounds = np.empty(n_total_boxes, dtype=np.single)
+        float[::1] box_y_lower_bounds = np.empty(n_total_boxes, dtype=np.single)
+        float[::1] box_y_upper_bounds = np.empty(n_total_boxes, dtype=np.single)
 
     for i in range(n_boxes_1d):
         for j in range(n_boxes_1d):
@@ -825,18 +825,18 @@ cpdef double estimate_negative_gradient_fft_2d(
 
     # Prepare the interpolants for a single interval, so we can use their
     # relative positions later on
-    cdef double[::1] y_tilde = np.empty(n_interpolation_points, dtype=float)
-    cdef double h = 1. / n_interpolation_points
+    cdef float[::1] y_tilde = np.empty(n_interpolation_points, dtype=np.single)
+    cdef float h = 1. / n_interpolation_points
     y_tilde[0] = h / 2
     for i in range(1, n_interpolation_points):
         y_tilde[i] = y_tilde[i - 1] + h
 
     # Evaluate the the squared cauchy kernel at the interpolation nodes
-    cdef double[:, ::1] sq_kernel_tilde = compute_kernel_tilde_2d(
+    cdef float[:, ::1] sq_kernel_tilde = compute_kernel_tilde_2d(
          &cauchy_2d_exp1p, n_interpolation_points * n_boxes_1d, coord_min, h * box_width, dof,
     )
     # The non-square cauchy kernel is only used if dof != 1, so don't do unnecessary work
-    cdef double[:, ::1] kernel_tilde
+    cdef float[:, ::1] kernel_tilde
     if dof != 1:
         kernel_tilde = compute_kernel_tilde_2d(
             &cauchy_2d, n_interpolation_points * n_boxes_1d, coord_min, h * box_width, dof,
@@ -845,7 +845,7 @@ cpdef double estimate_negative_gradient_fft_2d(
     # STEP 1: Compute the w coefficients
     # Set up q_j values
     cdef int n_terms = 4
-    cdef double[:, ::1] q_j = np.empty((n_samples, n_terms), dtype=float)
+    cdef float[:, ::1] q_j = np.empty((n_samples, n_terms), dtype=np.single)
     if dof != 1:
         for i in range(n_samples):
             q_j[i, 0] = 1
@@ -861,9 +861,9 @@ cpdef double estimate_negative_gradient_fft_2d(
 
     # Compute the relative position of each reference point in its box
     cdef:
-        double[::1] x_in_box = np.empty(n_samples, dtype=float)
-        double[::1] y_in_box = np.empty(n_samples, dtype=float)
-        double y_min, x_min
+        float[::1] x_in_box = np.empty(n_samples, dtype=np.single)
+        float[::1] y_in_box = np.empty(n_samples, dtype=np.single)
+        float y_min, x_min
 
     for i in range(n_samples):
         box_idx = point_box_idx[i]
@@ -873,13 +873,13 @@ cpdef double estimate_negative_gradient_fft_2d(
         y_in_box[i] = (embedding[i, 1] - y_min) / box_width
 
     # Interpolate kernel using Lagrange polynomials
-    cdef double[:, ::1] x_interpolated_values = interpolate(x_in_box, y_tilde)
-    cdef double[:, ::1] y_interpolated_values = interpolate(y_in_box, y_tilde)
+    cdef float[:, ::1] x_interpolated_values = interpolate(x_in_box, y_tilde)
+    cdef float[:, ::1] y_interpolated_values = interpolate(y_in_box, y_tilde)
 
     # Actually compute w_{ij}s
     cdef:
         int total_interpolation_points = n_total_boxes * n_interpolation_points ** 2
-        double[:, ::1] w_coefficients = np.zeros((total_interpolation_points, n_terms), dtype=float)
+        float[:, ::1] w_coefficients = np.zeros((total_interpolation_points, n_terms), dtype=np.single)
         Py_ssize_t box_i, box_j, interp_i, interp_j, idx
 
     for i in range(n_samples):
@@ -899,7 +899,7 @@ cpdef double estimate_negative_gradient_fft_2d(
                         q_j[i, d]
 
     # STEP 2: Compute the kernel values evaluated at the interpolation nodes
-    cdef double[:, ::1] y_tilde_values = np.empty((total_interpolation_points, n_terms))
+    cdef float[:, ::1] y_tilde_values = np.empty((total_interpolation_points, n_terms))
     if dof != 1:
         matrix_multiply_fft_2d(sq_kernel_tilde, w_coefficients[:, :3], y_tilde_values[:, :3])
         matrix_multiply_fft_2d(kernel_tilde, w_coefficients[:, 3:], y_tilde_values[:, 3:])
@@ -907,7 +907,7 @@ cpdef double estimate_negative_gradient_fft_2d(
         matrix_multiply_fft_2d(sq_kernel_tilde, w_coefficients, y_tilde_values)
 
     # STEP 3: Compute the potentials \tilde{\phi(y_i)}
-    cdef double[:, ::1] phi = np.zeros((n_samples, n_terms), dtype=float)
+    cdef float[:, ::1] phi = np.zeros((n_samples, n_terms), dtype=np.single)
     for i in range(n_samples):
         box_idx = point_box_idx[i]
         box_i = box_idx % n_boxes_1d
@@ -926,7 +926,7 @@ cpdef double estimate_negative_gradient_fft_2d(
     PyMem_Free(point_box_idx)
 
     # Compute the normalization term Z or sum of q_{ij}s
-    cdef double sum_Q = 0, y1, y2
+    cdef float sum_Q = 0, y1, y2
     if dof != 1:
         for i in range(n_samples):
             sum_Q += phi[i, 3]
@@ -950,18 +950,18 @@ cpdef double estimate_negative_gradient_fft_2d(
 
 
 cpdef tuple prepare_negative_gradient_fft_interpolation_grid_2d(
-    double[:, ::1] reference_embedding,
+    float[:, ::1] reference_embedding,
     Py_ssize_t n_interpolation_points=3,
     Py_ssize_t min_num_intervals=10,
-    double ints_in_interval=1,
-    double dof=1,
-    double padding=0,
+    float ints_in_interval=1,
+    float dof=1,
+    float padding=0,
 ):
     cdef:
         Py_ssize_t i, j, d, box_idx
         Py_ssize_t n_reference_samples = reference_embedding.shape[0]
 
-        double coord_max = -INFINITY, coord_min = INFINITY
+        float coord_max = -INFINITY, coord_min = INFINITY
     # Determine the min/max values of the embedding
     # First, check the existing embedding
     for i in range(n_reference_samples):
@@ -987,14 +987,14 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_2d(
 
     cdef int n_boxes_1d = <int>fmax(min_num_intervals, (coord_max - coord_min) / ints_in_interval)
     cdef int n_total_boxes = n_boxes_1d ** 2
-    cdef double box_width = (coord_max - coord_min) / n_boxes_1d
+    cdef float box_width = (coord_max - coord_min) / n_boxes_1d
 
     # Compute the box bounds
     cdef:
-        double[::1] box_x_lower_bounds = np.empty(n_total_boxes, dtype=float)
-        double[::1] box_x_upper_bounds = np.empty(n_total_boxes, dtype=float)
-        double[::1] box_y_lower_bounds = np.empty(n_total_boxes, dtype=float)
-        double[::1] box_y_upper_bounds = np.empty(n_total_boxes, dtype=float)
+        float[::1] box_x_lower_bounds = np.empty(n_total_boxes, dtype=np.single)
+        float[::1] box_x_upper_bounds = np.empty(n_total_boxes, dtype=np.single)
+        float[::1] box_y_lower_bounds = np.empty(n_total_boxes, dtype=np.single)
+        float[::1] box_y_upper_bounds = np.empty(n_total_boxes, dtype=np.single)
 
     for i in range(n_boxes_1d):
         for j in range(n_boxes_1d):
@@ -1021,18 +1021,18 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_2d(
 
     # Prepare the interpolants for a single interval, so we can use their
     # relative positions later on
-    cdef double[::1] y_tilde = np.empty(n_interpolation_points, dtype=float)
-    cdef double h = 1. / n_interpolation_points
+    cdef float[::1] y_tilde = np.empty(n_interpolation_points, dtype=np.single)
+    cdef float h = 1. / n_interpolation_points
     y_tilde[0] = h / 2
     for i in range(1, n_interpolation_points):
         y_tilde[i] = y_tilde[i - 1] + h
 
     # Evaluate the the squared cauchy kernel at the interpolation nodes
-    cdef double[:, ::1] sq_kernel_tilde = compute_kernel_tilde_2d(
+    cdef float[:, ::1] sq_kernel_tilde = compute_kernel_tilde_2d(
          &cauchy_2d_exp1p, n_interpolation_points * n_boxes_1d, coord_min, h * box_width, dof,
     )
     # The non-square cauchy kernel is only used if dof != 1, so don't do unnecessary work
-    cdef double[:, ::1] kernel_tilde
+    cdef float[:, ::1] kernel_tilde
     if dof != 1:
         kernel_tilde = compute_kernel_tilde_2d(
             &cauchy_2d, n_interpolation_points * n_boxes_1d, coord_min, h * box_width, dof,
@@ -1041,7 +1041,7 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_2d(
     # STEP 1: Compute the w coefficients
     # Set up q_j values
     cdef int n_terms = 4
-    cdef double[:, ::1] q_j = np.empty((n_reference_samples, n_terms), dtype=float)
+    cdef float[:, ::1] q_j = np.empty((n_reference_samples, n_terms), dtype=np.single)
     if dof != 1:
         for i in range(n_reference_samples):
             q_j[i, 0] = 1
@@ -1057,9 +1057,9 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_2d(
 
     # Compute the relative position of each reference point in its box
     cdef:
-        double[::1] reference_x_in_box = np.empty(n_reference_samples, dtype=float)
-        double[::1] reference_y_in_box = np.empty(n_reference_samples, dtype=float)
-        double y_min, x_min
+        float[::1] reference_x_in_box = np.empty(n_reference_samples, dtype=np.single)
+        float[::1] reference_y_in_box = np.empty(n_reference_samples, dtype=np.single)
+        float y_min, x_min
 
     for i in range(n_reference_samples):
         box_idx = reference_point_box_idx[i]
@@ -1069,13 +1069,13 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_2d(
         reference_y_in_box[i] = (reference_embedding[i, 1] - y_min) / box_width
 
     # Interpolate kernel using Lagrange polynomials
-    cdef double[:, ::1] reference_x_interpolated_values = interpolate(reference_x_in_box, y_tilde)
-    cdef double[:, ::1] reference_y_interpolated_values = interpolate(reference_y_in_box, y_tilde)
+    cdef float[:, ::1] reference_x_interpolated_values = interpolate(reference_x_in_box, y_tilde)
+    cdef float[:, ::1] reference_y_interpolated_values = interpolate(reference_y_in_box, y_tilde)
 
     # Actually compute w_{ij}s
     cdef:
         int total_interpolation_points = n_total_boxes * n_interpolation_points ** 2
-        double[:, ::1] w_coefficients = np.zeros((total_interpolation_points, n_terms), dtype=float)
+        float[:, ::1] w_coefficients = np.zeros((total_interpolation_points, n_terms), dtype=np.single)
         Py_ssize_t box_i, box_j, interp_i, interp_j, idx
 
     for i in range(n_reference_samples):
@@ -1095,7 +1095,7 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_2d(
                         q_j[i, d]
 
     # STEP 2: Compute the kernel values evaluated at the interpolation nodes
-    cdef double[:, ::1] y_tilde_values = np.empty((total_interpolation_points, n_terms))
+    cdef float[:, ::1] y_tilde_values = np.empty((total_interpolation_points, n_terms))
     if dof != 1:
         matrix_multiply_fft_2d(sq_kernel_tilde, w_coefficients[:, :3], y_tilde_values[:, :3])
         matrix_multiply_fft_2d(kernel_tilde, w_coefficients[:, 3:], y_tilde_values[:, 3:])
@@ -1109,22 +1109,22 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_2d(
     )
 
 
-cpdef double estimate_negative_gradient_fft_2d_with_grid(
-    double[:, ::1] embedding,
-    double[:, ::1] gradient,
-    double[:, ::1] y_tilde_values,
-    double[::1] box_x_lower_bounds,
-    double[::1] box_y_lower_bounds,
+cpdef float estimate_negative_gradient_fft_2d_with_grid(
+    float[:, ::1] embedding,
+    float[:, ::1] gradient,
+    float[:, ::1] y_tilde_values,
+    float[::1] box_x_lower_bounds,
+    float[::1] box_y_lower_bounds,
     Py_ssize_t n_interpolation_points,
-    double dof,
+    float dof,
 ):
     cdef:
         Py_ssize_t i, j, d, box_idx
         Py_ssize_t n_samples = embedding.shape[0]
         Py_ssize_t n_terms = y_tilde_values.shape[1]
         Py_ssize_t n_boxes_1d = int(sqrt(box_x_lower_bounds.shape[0]))
-        double coord_min = box_x_lower_bounds[0]
-        double box_width = box_x_lower_bounds[1] - box_x_lower_bounds[0]
+        float coord_min = box_x_lower_bounds[0]
+        float box_width = box_x_lower_bounds[1] - box_x_lower_bounds[0]
 
     # Determine which box each point belongs to
     cdef int box_x_idx, box_y_idx
@@ -1143,8 +1143,8 @@ cpdef double estimate_negative_gradient_fft_2d_with_grid(
 
     # Prepare the interpolants for a single interval, so we can use their
     # relative positions later on
-    cdef double[::1] y_tilde = np.empty(n_interpolation_points, dtype=float)
-    cdef double h = 1. / n_interpolation_points
+    cdef float[::1] y_tilde = np.empty(n_interpolation_points, dtype=np.single)
+    cdef float h = 1. / n_interpolation_points
     y_tilde[0] = h / 2
     for i in range(1, n_interpolation_points):
         y_tilde[i] = y_tilde[i - 1] + h
@@ -1152,10 +1152,10 @@ cpdef double estimate_negative_gradient_fft_2d_with_grid(
     # STEP 3: Compute the potentials \tilde{\phi(y_i)}
     # Compute the relative position of each new embedding point in its box
     cdef:
-        double[::1] x_in_box = np.empty(n_samples, dtype=float)
-        double[::1] y_in_box = np.empty(n_samples, dtype=float)
+        float[::1] x_in_box = np.empty(n_samples, dtype=np.single)
+        float[::1] y_in_box = np.empty(n_samples, dtype=np.single)
 
-    cdef double y_min, x_min
+    cdef float y_min, x_min
     for i in range(n_samples):
         box_idx = point_box_idx[i]
         x_min = box_x_lower_bounds[box_idx]
@@ -1164,13 +1164,13 @@ cpdef double estimate_negative_gradient_fft_2d_with_grid(
         y_in_box[i] = (embedding[i, 1] - y_min) / box_width
 
     # Interpolate kernel using Lagrange polynomials
-    cdef double[:, ::1] x_interpolated_values = interpolate(x_in_box, y_tilde)
-    cdef double[:, ::1] y_interpolated_values = interpolate(y_in_box, y_tilde)
+    cdef float[:, ::1] x_interpolated_values = interpolate(x_in_box, y_tilde)
+    cdef float[:, ::1] y_interpolated_values = interpolate(y_in_box, y_tilde)
 
     # Actually compute \tilde{\phi(y_i)}
     cdef Py_ssize_t box_i, box_j, interp_i, interp_j, idx
 
-    cdef double[:, ::1] phi = np.zeros((n_samples, n_terms), dtype=float)
+    cdef float[:, ::1] phi = np.zeros((n_samples, n_terms), dtype=np.single)
     for i in range(n_samples):
         box_idx = point_box_idx[i]
         box_i = box_idx % n_boxes_1d
@@ -1189,8 +1189,8 @@ cpdef double estimate_negative_gradient_fft_2d_with_grid(
     PyMem_Free(point_box_idx)
 
     # Compute the normalization term Z or sum of q_{ij}s
-    cdef double[::1] sum_Qi = np.empty(n_samples, dtype=float)
-    cdef double y1, y2
+    cdef float[::1] sum_Qi = np.empty(n_samples, dtype=np.single)
+    cdef float y1, y2
     if dof != 1:
         for i in range(n_samples):
             sum_Qi[i] = phi[i, 3]
