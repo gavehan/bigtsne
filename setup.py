@@ -1,5 +1,4 @@
 import distutils
-import os
 import platform
 import sys
 import tempfile
@@ -8,7 +7,7 @@ from distutils import ccompiler
 from distutils.command.build_ext import build_ext
 from distutils.errors import CompileError, LinkError
 from distutils.sysconfig import customize_compiler
-from os.path import join
+from os import path, environ
 
 import setuptools
 from setuptools import setup, Extension
@@ -28,29 +27,28 @@ class ConvertNotebooksToDocs(distutils.cmd.Command):
 
     def run(self):
         import nbconvert
-        from os.path import join
 
         exporter = nbconvert.RSTExporter()
         writer = nbconvert.writers.FilesWriter()
 
         files = [
-            join("examples", "01_simple_usage.ipynb"),
-            join("examples", "02_advanced_usage.ipynb"),
-            join("examples", "03_preserving_global_structure.ipynb"),
-            join("examples", "04_large_data_sets.ipynb"),
+            path.join("examples", "01_simple_usage.ipynb"),
+            path.join("examples", "02_advanced_usage.ipynb"),
+            path.join("examples", "03_preserving_global_structure.ipynb"),
+            path.join("examples", "04_large_data_sets.ipynb"),
         ]
-        target_dir = join("docs", "source", "examples")
+        target_dir = path.join("docs", "source", "examples")
 
         for fname in files:
             self.announce(f"Converting {fname}...")
-            directory, nb_name = fname.split("/")
+            _, nb_name = fname.split("/")
             nb_name, _ = nb_name.split(".")
             body, resources = exporter.from_file(fname)
-            writer.build_directory = join(target_dir, nb_name)
+            writer.build_directory = path.join(target_dir, nb_name)
             writer.write(body, resources, nb_name)
 
 
-class get_numpy_include:
+class GetNumpyInclude:
     """Helper class to determine the numpy include path
 
     The purpose of this class is to postpone importing numpy until it is
@@ -65,16 +63,16 @@ class get_numpy_include:
 def get_include_dirs():
     """Get include dirs for the compiler."""
     return (
-        os.path.join(sys.prefix, "include"),
-        os.path.join(sys.prefix, "Library", "include"),
+        path.join(sys.prefix, "include"),
+        path.join(sys.prefix, "Library", "include"),
     )
 
 
 def get_library_dirs():
     """Get library dirs for the compiler."""
     return (
-        os.path.join(sys.prefix, "lib"),
-        os.path.join(sys.prefix, "Library", "lib"),
+        path.join(sys.prefix, "lib"),
+        path.join(sys.prefix, "Library", "lib"),
     )
 
 
@@ -97,9 +95,9 @@ def has_c_library(library, extension=".c"):
 
     """
     with tempfile.TemporaryDirectory(dir=".") as directory:
-        name = join(directory, "%s%s" % (library, extension))
+        name = path.join(directory, f"{library}{extension}")
         with open(name, "w") as f:
-            f.write("#include <%s.h>\n" % library)
+            f.write(f"#include <{library}.h>\n")
             f.write("int main() {}\n")
 
         # Get a compiler instance
@@ -126,7 +124,7 @@ class CythonBuildExt(build_ext):
         # that was run
         for extension in extensions:
             for idx, source in enumerate(extension.sources):
-                base, ext = os.path.splitext(source)
+                base, ext = path.splitext(source)
                 if ext == ".pyx":
                     base += ".cpp" if extension.language == "c++" else ".c"
                     extension.sources[idx] = base
@@ -166,7 +164,7 @@ class CythonBuildExt(build_ext):
         # We don't want the compiler to optimize for system architecture if
         # we're building packages to be distributed by conda-forge, but if the
         # package is being built locally, this is desired
-        if not ("AZURE_BUILD" in os.environ or "CONDA_BUILD" in os.environ):
+        if not ("AZURE_BUILD" in environ or "CONDA_BUILD" in environ):
             if platform.machine() == "ppc64le":
                 extra_compile_args += ["-mcpu=native"]
             if platform.machine() == "x86_64":
@@ -200,7 +198,7 @@ class CythonBuildExt(build_ext):
         # Add numpy and system include directories
         for extension in self.extensions:
             extension.include_dirs.extend(get_include_dirs())
-            extension.include_dirs.append(get_numpy_include())
+            extension.include_dirs.append(GetNumpyInclude())
 
         # Add numpy and system include directories
         for extension in self.extensions:
@@ -212,17 +210,12 @@ class CythonBuildExt(build_ext):
 # Prepare the Annoy extension
 # Adapted from annoy setup.py
 # Various platform-dependent extras
-extra_compile_args = []
-extra_link_args = []
-
-annoy_path = "bigtsne/dependencies/annoy/"
+ANNOY_PATH = "bigtsne/dependencies/annoy/"
 annoy = Extension(
     "bigtsne.dependencies.annoy.annoylib",
-    [annoy_path + "annoymodule.cc"],
-    depends=[annoy_path + f for f in ["annoylib.h", "kissrandom.h", "mman.h"]],
-    language="c++",
-    extra_compile_args=extra_compile_args,
-    extra_link_args=extra_link_args,
+    [ANNOY_PATH + "annoymodule.cc"],
+    depends=[ANNOY_PATH + f for f in ["annoylib.h", "kissrandom.h", "mman.h"]],
+    language="c++"
 )
 
 # Other extensions
@@ -267,7 +260,7 @@ def readme():
 
 # Read in version
 __version__: str = ""  # This is overridden by the next line
-exec(open(os.path.join("bigtsne", "version.py")).read())
+exec(open(path.join("bigtsne", "version.py")).read())
 
 setup(
     name="bigtsne",
@@ -302,7 +295,7 @@ setup(
     ],
 
     packages=setuptools.find_packages(include=["bigtsne", "bigtsne.*"]),
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=[
         "numpy>=1.16.6",
         "scikit-learn>=0.20",
