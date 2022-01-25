@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from openTSNE.utils import clip_point_to_disc
+from bigtsne.utils import clip_point_to_disc
 
 
 class TestClipping(unittest.TestCase):

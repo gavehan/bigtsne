@@ -13,18 +13,18 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
-import openTSNE
-from openTSNE import affinity
-from openTSNE import initialization
-from openTSNE.affinity import PerplexityBasedNN
-from openTSNE.nearest_neighbors import NNDescent
-from openTSNE.tsne import kl_divergence_bh, kl_divergence_fft
-from openTSNE.utils import is_package_installed
+import bigtsne
+from bigtsne import affinity
+from bigtsne import initialization
+from bigtsne.affinity import PerplexityBasedNN
+from bigtsne.nearest_neighbors import NNDescent
+from bigtsne.tsne import kl_divergence_bh, kl_divergence_fft
+from bigtsne.utils import is_package_installed
 
 np.random.seed(42)
 affinity.log.setLevel(logging.ERROR)
 
-TSNE = partial(openTSNE.TSNE, neighbors="exact", negative_gradient_method="bh")
+TSNE = partial(bigtsne.TSNE, neighbors="exact", negative_gradient_method="bh")
 
 
 def check_params(params: dict) -> Callable:
@@ -483,7 +483,7 @@ class TSNEInitialization(unittest.TestCase):
         """Initializations should be deterministic."""
         x_train, x_test = train_test_split(self.iris, test_size=0.33, random_state=42)
 
-        embedding = openTSNE.TSNE(
+        embedding = bigtsne.TSNE(
             early_exaggeration_iter=50,
             n_iter=50,
             neighbors="exact",
@@ -501,7 +501,7 @@ class TSNEInitialization(unittest.TestCase):
         """Transform with Barnes-Hut optimization should be deterministic."""
         x_train, x_test = train_test_split(self.iris, test_size=0.33, random_state=42)
 
-        embedding = openTSNE.TSNE(
+        embedding = bigtsne.TSNE(
             early_exaggeration_iter=10,
             n_iter=10,
             neighbors="exact",
@@ -523,7 +523,7 @@ class TSNEInitialization(unittest.TestCase):
         """Transform with interpolation based optimization should be deterministic."""
         x_train, x_test = train_test_split(self.iris, test_size=0.33, random_state=42)
 
-        embedding = openTSNE.TSNE(
+        embedding = bigtsne.TSNE(
             early_exaggeration_iter=10,
             n_iter=10,
             neighbors="exact",
@@ -591,12 +591,12 @@ class TestRandomState(unittest.TestCase):
             "Same random state produced different partial embeddings",
         )
 
-    @patch("openTSNE.initialization.random", wraps=openTSNE.initialization.random)
-    @patch("openTSNE.nearest_neighbors.Sklearn", wraps=openTSNE.nearest_neighbors.Sklearn)
+    @patch("openTSNE.initialization.random", wraps=bigtsne.initialization.random)
+    @patch("openTSNE.nearest_neighbors.Sklearn", wraps=bigtsne.nearest_neighbors.Sklearn)
     def test_random_state_parameter_is_propagated_random_init_exact(self, init, neighbors):
         random_state = 1
 
-        tsne = openTSNE.TSNE(
+        tsne = bigtsne.TSNE(
             neighbors="exact",
             initialization="random",
             random_state=random_state,
@@ -609,12 +609,12 @@ class TestRandomState(unittest.TestCase):
         neighbors.assert_called_once()
         check_mock_called_with_kwargs(neighbors, {"random_state": random_state})
 
-    @patch("openTSNE.initialization.pca", wraps=openTSNE.initialization.pca)
-    @patch("openTSNE.nearest_neighbors.Annoy", wraps=openTSNE.nearest_neighbors.Annoy)
+    @patch("openTSNE.initialization.pca", wraps=bigtsne.initialization.pca)
+    @patch("openTSNE.nearest_neighbors.Annoy", wraps=bigtsne.nearest_neighbors.Annoy)
     def test_random_state_parameter_is_propagated_pca_init_approx(self, init, neighbors):
         random_state = 1
 
-        tsne = openTSNE.TSNE(
+        tsne = bigtsne.TSNE(
             neighbors="approx",
             initialization="pca",
             random_state=random_state,
@@ -632,14 +632,14 @@ class TestDefaultParameterSettings(unittest.TestCase):
     def test_default_params_simple_vs_complex_flow(self):
         # Relevant affinity parameters are passed to the affinity object
         mismatching = get_mismatching_default_values(
-            openTSNE.TSNE,
+            bigtsne.TSNE,
             PerplexityBasedNN,
             {"neighbors": "method"},
         )
         self.assertEqual(mismatching, [])
 
         assert len(
-            get_shared_parameters(openTSNE.TSNE, openTSNE.tsne.gradient_descent.__call__)
+            get_shared_parameters(bigtsne.TSNE, bigtsne.tsne.gradient_descent.__call__)
         ) > 0, \
             "`TSNE` and `gradient_descent` have no shared parameters. Have you " \
             "changed the signature or usage?"
@@ -647,8 +647,8 @@ class TestDefaultParameterSettings(unittest.TestCase):
         # The relevant gradient descent parameters are passed down directly to
         # `gradient_descent`
         mismatching = get_mismatching_default_values(
-            openTSNE.TSNE,
-            openTSNE.tsne.gradient_descent.__call__,
+            bigtsne.TSNE,
+            bigtsne.tsne.gradient_descent.__call__,
         )
         # Some default parameters should be different between TSNE and gradient_descent
         allowed_mismatches = ("n_iter", "learning_rate")
@@ -803,7 +803,7 @@ class TestGradientDescentOptimizer(unittest.TestCase):
         self.assertIs(partial1.optimizer, partial2.optimizer)
 
     def test_pickling(self):
-        obj = openTSNE.tsne.gradient_descent()
+        obj = bigtsne.tsne.gradient_descent()
         obj.gains = np.ones(5)
         loaded_obj = pickle.loads(pickle.dumps(obj))
         np.testing.assert_array_equal(loaded_obj.gains, np.ones(5))
@@ -811,15 +811,15 @@ class TestGradientDescentOptimizer(unittest.TestCase):
     def test_gains_is_always_numpy_array(self):
         embedding = self.tsne.prepare_initial(self.x)
         self.assertIsInstance(embedding.optimizer.gains, (type(None), np.ndarray))
-        self.assertNotIsInstance(embedding.optimizer.gains, openTSNE.TSNEEmbedding)
+        self.assertNotIsInstance(embedding.optimizer.gains, bigtsne.TSNEEmbedding)
 
         embedding = embedding.optimize(10)
         self.assertIsInstance(embedding.optimizer.gains, (type(None), np.ndarray))
-        self.assertNotIsInstance(embedding.optimizer.gains, openTSNE.TSNEEmbedding)
+        self.assertNotIsInstance(embedding.optimizer.gains, bigtsne.TSNEEmbedding)
 
         embedding.optimize(10, inplace=True)
         self.assertIsInstance(embedding.optimizer.gains, (type(None), np.ndarray))
-        self.assertNotIsInstance(embedding.optimizer.gains, openTSNE.TSNEEmbedding)
+        self.assertNotIsInstance(embedding.optimizer.gains, bigtsne.TSNEEmbedding)
 
     def test_pickling_via_embedding(self):
         embedding = self.tsne.prepare_initial(self.x)
@@ -849,9 +849,9 @@ class TestAffinityIntegration(unittest.TestCase):
         cls.x_test = np.random.normal(100, 50, (25, 4))
 
     def test_transform_with_standard_affinity(self):
-        init = openTSNE.initialization.random(self.x)
-        aff = openTSNE.affinity.PerplexityBasedNN(self.x, 5, method="exact")
-        embedding = openTSNE.TSNEEmbedding(init, aff, negative_gradient_method="bh")
+        init = bigtsne.initialization.random(self.x)
+        aff = bigtsne.affinity.PerplexityBasedNN(self.x, 5, method="exact")
+        embedding = bigtsne.TSNEEmbedding(init, aff, negative_gradient_method="bh")
         embedding.optimize(100, inplace=True)
 
         # This should not raise an error
@@ -860,9 +860,9 @@ class TestAffinityIntegration(unittest.TestCase):
     def test_transform_with_nonstandard_affinity(self):
         """Should raise an informative error when a non-standard affinity is used
         with `transform`."""
-        init = openTSNE.initialization.random(self.x)
-        aff = openTSNE.affinity.Multiscale(self.x, [2, 5], method="exact")
-        embedding = openTSNE.TSNEEmbedding(init, aff, negative_gradient_method="bh")
+        init = bigtsne.initialization.random(self.x)
+        aff = bigtsne.affinity.Multiscale(self.x, [2, 5], method="exact")
+        embedding = bigtsne.TSNEEmbedding(init, aff, negative_gradient_method="bh")
         embedding.optimize(100, inplace=True)
 
         with self.assertRaises(TypeError):
@@ -874,14 +874,14 @@ class TestTSNEEmebedding(unittest.TestCase):
         tsne = TSNE(random_state=4)
         embedding = tsne.fit(np.random.randn(100, 4))
         loaded_obj = pickle.loads(pickle.dumps(embedding))
-        self.assertIsInstance(loaded_obj, openTSNE.TSNEEmbedding)
-        self.assertIsInstance(loaded_obj.affinities, openTSNE.affinity.Affinities)
+        self.assertIsInstance(loaded_obj, bigtsne.TSNEEmbedding)
+        self.assertIsInstance(loaded_obj.affinities, bigtsne.affinity.Affinities)
         self.assertEqual(4, loaded_obj.random_state)
 
     def test_pickling_with_transform(self):
         tsne = TSNE(random_state=4)
-        embedding: openTSNE.TSNEEmbedding = tsne.fit(np.random.randn(100, 4))
-        loaded_obj: openTSNE.TSNEEmbedding = pickle.loads(pickle.dumps(embedding))
+        embedding: bigtsne.TSNEEmbedding = tsne.fit(np.random.randn(100, 4))
+        loaded_obj: bigtsne.TSNEEmbedding = pickle.loads(pickle.dumps(embedding))
         loaded_obj.transform(np.random.randn(100, 4))
 
 

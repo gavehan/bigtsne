@@ -7,7 +7,7 @@ from scipy.spatial.distance import squareform, pdist
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 
-from openTSNE import affinity, nearest_neighbors
+from bigtsne import affinity, nearest_neighbors
 
 affinity.log.setLevel(logging.ERROR)
 

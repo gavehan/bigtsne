@@ -7,8 +7,8 @@ from sklearn import datasets
 from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier, NearestNeighbors
 
-import openTSNE
-from openTSNE import affinity, initialization, nearest_neighbors
+import bigtsne
+from bigtsne import affinity, initialization, nearest_neighbors
 
 Multiscale = partial(affinity.Multiscale, method="exact")
 MultiscaleMixture = partial(affinity.MultiscaleMixture, method="exact")
@@ -22,7 +22,7 @@ tsne_params = dict(
     neighbors="exact",
     negative_gradient_method="bh",
 )
-TSNE = partial(openTSNE.TSNE, **tsne_params)
+TSNE = partial(bigtsne.TSNE, **tsne_params)
 
 
 class TestUsage(unittest.TestCase):
@@ -58,7 +58,7 @@ class TestUsageLowestLevel(TestUsage):
     def test_1(self):
         init = initialization.pca(self.x)
         aff = affinity.PerplexityBasedNN(self.x, perplexity=30)
-        embedding = openTSNE.TSNEEmbedding(init, aff)
+        embedding = bigtsne.TSNEEmbedding(init, aff)
         embedding.optimize(25, exaggeration=12, momentum=0.5, inplace=True)
         embedding.optimize(50, exaggeration=1, momentum=0.8, inplace=True)
         self.eval_embedding(embedding)

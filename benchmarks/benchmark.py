@@ -27,8 +27,8 @@ from MulticoreTSNE import MulticoreTSNE as MulticoreTSNE_
 from sklearn.manifold import TSNE as SKLTSNE
 from sklearn.utils import check_random_state
 
-import openTSNE
-import openTSNE.callbacks
+import bigtsne
+import bigtsne.callbacks
 
 
 class TSNEBenchmark:
@@ -70,7 +70,7 @@ class openTSNENNDescent(TSNEBenchmark):
 
         start = time.time()
         start_aff = time.time()
-        affinity = openTSNE.affinity.PerplexityBasedNN(
+        affinity = bigtsne.affinity.PerplexityBasedNN(
             x,
             perplexity=self.perplexity,
             method="pynndescent",
@@ -80,12 +80,12 @@ class openTSNENNDescent(TSNEBenchmark):
         )
         print("openTSNE: NN search", time.time() - start_aff, flush=True)
 
-        init = openTSNE.initialization.random(
+        init = bigtsne.initialization.random(
             x, n_components=2, random_state=random_state, verbose=True
         )
 
         start_optim = time.time()
-        embedding = openTSNE.TSNEEmbedding(
+        embedding = bigtsne.TSNEEmbedding(
             init,
             affinity,
             learning_rate=self.learning_rate,
@@ -116,7 +116,7 @@ class openTSNEBH(TSNEBenchmark):
 
         start = time.time()
         start_aff = time.time()
-        affinity = openTSNE.affinity.PerplexityBasedNN(
+        affinity = bigtsne.affinity.PerplexityBasedNN(
             x,
             perplexity=self.perplexity,
             method="annoy",
@@ -126,12 +126,12 @@ class openTSNEBH(TSNEBenchmark):
         )
         print("openTSNE: NN search", time.time() - start_aff, flush=True)
 
-        init = openTSNE.initialization.random(
+        init = bigtsne.initialization.random(
             x, n_components=2, random_state=random_state, verbose=True
         )
 
         start_optim = time.time()
-        embedding = openTSNE.TSNEEmbedding(
+        embedding = bigtsne.TSNEEmbedding(
             init,
             affinity,
             learning_rate=self.learning_rate,
@@ -162,7 +162,7 @@ class openTSNEFFT(TSNEBenchmark):
 
         start = time.time()
         start_aff = time.time()
-        affinity = openTSNE.affinity.PerplexityBasedNN(
+        affinity = bigtsne.affinity.PerplexityBasedNN(
             x,
             perplexity=self.perplexity,
             method="annoy",
@@ -172,12 +172,12 @@ class openTSNEFFT(TSNEBenchmark):
         )
         print("openTSNE: NN search", time.time() - start_aff, flush=True)
 
-        init = openTSNE.initialization.random(
+        init = bigtsne.initialization.random(
             x, n_components=2, random_state=random_state, verbose=True,
         )
 
         start_optim = time.time()
-        embedding = openTSNE.TSNEEmbedding(
+        embedding = bigtsne.TSNEEmbedding(
             init,
             affinity,
             learning_rate=self.learning_rate,
@@ -231,9 +231,9 @@ class FItSNE(TSNEBenchmark):
         print("-" * 80, flush=True)
 
         if random_state == -1:
-            init = openTSNE.initialization.random(x, n_components=2)
+            init = bigtsne.initialization.random(x, n_components=2)
         else:
-            init = openTSNE.initialization.random(
+            init = bigtsne.initialization.random(
                 x, n_components=2, random_state=random_state
             )
 
@@ -263,7 +263,7 @@ class sklearn(TSNEBenchmark):
         print("Random state", random_state)
         print("-" * 80, flush=True)
 
-        init = openTSNE.initialization.random(
+        init = bigtsne.initialization.random(
             x, n_components=2, random_state=random_state
         )
 

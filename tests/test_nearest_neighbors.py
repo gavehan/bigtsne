@@ -12,8 +12,8 @@ from sklearn import datasets
 
 from sklearn.utils import check_random_state
 
-from openTSNE import nearest_neighbors
-from openTSNE.utils import is_package_installed
+from bigtsne import nearest_neighbors
+from bigtsne.utils import is_package_installed
 from .test_tsne import check_mock_called_with_kwargs
 
 
