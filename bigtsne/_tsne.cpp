@@ -743,11 +743,11 @@ static CYTHON_INLINE PyObject* __Pyx_PyNumber_IntOrLong(PyObject* x);
 static CYTHON_INLINE Py_ssize_t __Pyx_PyIndex_AsSsize_t(PyObject*);
 static CYTHON_INLINE PyObject * __Pyx_PyInt_FromSize_t(size_t);
 #if CYTHON_ASSUME_SAFE_MACROS
-#define __pyx_PyFloat_AsFloat(x) (PyFloat_CheckExact(x) ? PyFloat_AS_DOUBLE(x) : PyFloat_AsFloat(x))
+#define __pyx_PyFloat_AsDouble(x) (PyFloat_CheckExact(x) ? PyFloat_AS_DOUBLE(x) : PyFloat_AsDouble(x))
 #else
-#define __pyx_PyFloat_AsFloat(x) PyFloat_AsFloat(x)
+#define __pyx_PyFloat_AsDouble(x) PyFloat_AsDouble(x)
 #endif
-#define __pyx_PyFloat_AsFloat(x) ((float) __pyx_PyFloat_AsFloat(x))
+#define __pyx_PyFloat_AsFloat(x) ((float) __pyx_PyFloat_AsDouble(x))
 #if PY_MAJOR_VERSION >= 3
 #define __Pyx_PyNumber_Int(x) (PyLong_CheckExact(x) ? __Pyx_NewRef(x) : PyNumber_Long(x))
 #else
@@ -4133,7 +4133,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_1compute_gaussian_perplexity(PyObject
     __pyx_v_distances = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_distances.memview)) __PYX_ERR(0, 31, __pyx_L3_error)
     __pyx_v_desired_perplexities = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_desired_perplexities.memview)) __PYX_ERR(0, 32, __pyx_L3_error)
     if (values[2]) {
-      __pyx_v_perplexity_tol = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_perplexity_tol == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L3_error)
+      __pyx_v_perplexity_tol = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_perplexity_tol == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L3_error)
     } else {
       __pyx_v_perplexity_tol = ((double)1e-8);
     }
@@ -5323,9 +5323,9 @@ static PyObject *__pyx_fuse_0__pyx_f_8openTSNE_5_tsne_estimate_positive_gradient
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_16 = PyFloat_FromFloat(__pyx_v_sum_P); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_16 = PyFloat_FromDouble(__pyx_v_sum_P); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_16);
-  __pyx_t_17 = PyFloat_FromFloat(__pyx_v_kl_divergence); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_17 = PyFloat_FromDouble(__pyx_v_kl_divergence); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_17);
   __pyx_t_18 = PyTuple_New(2); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_18);
@@ -5489,7 +5489,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_19__pyx_fuse_0estimate_positive_gradi
     __pyx_v_reference_embedding = __Pyx_PyObject_to_MemoryviewSlice_d_dc_double(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_reference_embedding.memview)) __PYX_ERR(0, 108, __pyx_L3_error)
     __pyx_v_gradient = __Pyx_PyObject_to_MemoryviewSlice_d_dc_double(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_gradient.memview)) __PYX_ERR(0, 109, __pyx_L3_error)
     if (values[6]) {
-      __pyx_v_dof = __pyx_PyFloat_AsFloat(values[6]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 110, __pyx_L3_error)
+      __pyx_v_dof = __pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 110, __pyx_L3_error)
     } else {
       __pyx_v_dof = __pyx_k__5;
     }
@@ -6123,9 +6123,9 @@ static PyObject *__pyx_fuse_1__pyx_f_8openTSNE_5_tsne_estimate_positive_gradient
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_16 = PyFloat_FromFloat(__pyx_v_sum_P); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_16 = PyFloat_FromDouble(__pyx_v_sum_P); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_16);
-  __pyx_t_17 = PyFloat_FromFloat(__pyx_v_kl_divergence); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_17 = PyFloat_FromDouble(__pyx_v_kl_divergence); if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_17);
   __pyx_t_18 = PyTuple_New(2); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_18);
@@ -6289,7 +6289,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_21__pyx_fuse_1estimate_positive_gradi
     __pyx_v_reference_embedding = __Pyx_PyObject_to_MemoryviewSlice_d_dc_double(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_reference_embedding.memview)) __PYX_ERR(0, 108, __pyx_L3_error)
     __pyx_v_gradient = __Pyx_PyObject_to_MemoryviewSlice_d_dc_double(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_gradient.memview)) __PYX_ERR(0, 109, __pyx_L3_error)
     if (values[6]) {
-      __pyx_v_dof = __pyx_PyFloat_AsFloat(values[6]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 110, __pyx_L3_error)
+      __pyx_v_dof = __pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 110, __pyx_L3_error)
     } else {
       __pyx_v_dof = __pyx_k__8;
     }
@@ -6825,12 +6825,12 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_5estimate_negative_gradient_bh(PyObje
     __pyx_v_embedding = __Pyx_PyObject_to_MemoryviewSlice_d_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_embedding.memview)) __PYX_ERR(0, 174, __pyx_L3_error)
     __pyx_v_gradient = __Pyx_PyObject_to_MemoryviewSlice_d_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_gradient.memview)) __PYX_ERR(0, 175, __pyx_L3_error)
     if (values[3]) {
-      __pyx_v_theta = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_theta == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 176, __pyx_L3_error)
+      __pyx_v_theta = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_theta == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 176, __pyx_L3_error)
     } else {
       __pyx_v_theta = ((double)0.5);
     }
     if (values[4]) {
-      __pyx_v_dof = __pyx_PyFloat_AsFloat(values[4]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 177, __pyx_L3_error)
+      __pyx_v_dof = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 177, __pyx_L3_error)
     } else {
       __pyx_v_dof = ((double)1.0);
     }
@@ -6898,7 +6898,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_4estimate_negative_gradient_bh(CYTHON
   __pyx_t_2.num_threads = __pyx_v_num_threads;
   __pyx_t_2.pairwise_normalization = __pyx_v_pairwise_normalization;
   __pyx_t_1 = __pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_bh(__pyx_v_tree, __pyx_v_embedding, __pyx_v_gradient, 0, &__pyx_t_2); 
-  __pyx_t_3 = PyFloat_FromFloat(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 172, __pyx_L1_error)
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
@@ -10246,12 +10246,12 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_7estimate_negative_gradient_fft_1d(Py
       __pyx_v_min_num_intervals = ((Py_ssize_t)10);
     }
     if (values[4]) {
-      __pyx_v_ints_in_interval = __pyx_PyFloat_AsFloat(values[4]); if (unlikely((__pyx_v_ints_in_interval == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 363, __pyx_L3_error)
+      __pyx_v_ints_in_interval = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_ints_in_interval == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 363, __pyx_L3_error)
     } else {
       __pyx_v_ints_in_interval = ((double)1.0);
     }
     if (values[5]) {
-      __pyx_v_dof = __pyx_PyFloat_AsFloat(values[5]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 364, __pyx_L3_error)
+      __pyx_v_dof = __pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 364, __pyx_L3_error)
     } else {
       __pyx_v_dof = ((double)1.0);
     }
@@ -10288,7 +10288,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_6estimate_negative_gradient_fft_1d(CY
   __pyx_t_2.ints_in_interval = __pyx_v_ints_in_interval;
   __pyx_t_2.dof = __pyx_v_dof;
   __pyx_t_1 = __pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_fft_1d(__pyx_v_embedding, __pyx_v_gradient, 0, &__pyx_t_2); 
-  __pyx_t_3 = PyFloat_FromFloat(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 358, __pyx_L1_error)
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 358, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
@@ -11658,17 +11658,17 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_9prepare_negative_gradient_fft_interp
       __pyx_v_min_num_intervals = ((Py_ssize_t)10);
     }
     if (values[3]) {
-      __pyx_v_ints_in_interval = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_ints_in_interval == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 515, __pyx_L3_error)
+      __pyx_v_ints_in_interval = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_ints_in_interval == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 515, __pyx_L3_error)
     } else {
       __pyx_v_ints_in_interval = ((double)1.0);
     }
     if (values[4]) {
-      __pyx_v_dof = __pyx_PyFloat_AsFloat(values[4]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 516, __pyx_L3_error)
+      __pyx_v_dof = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 516, __pyx_L3_error)
     } else {
       __pyx_v_dof = ((double)1.0);
     }
     if (values[5]) {
-      __pyx_v_padding = __pyx_PyFloat_AsFloat(values[5]); if (unlikely((__pyx_v_padding == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 517, __pyx_L3_error)
+      __pyx_v_padding = __pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_padding == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 517, __pyx_L3_error)
     } else {
       __pyx_v_padding = ((double)0.0);
     }
@@ -12494,7 +12494,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_11estimate_negative_gradient_fft_1d_w
     __pyx_v_y_tilde_values = __Pyx_PyObject_to_MemoryviewSlice_d_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_y_tilde_values.memview)) __PYX_ERR(0, 632, __pyx_L3_error)
     __pyx_v_box_lower_bounds = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_box_lower_bounds.memview)) __PYX_ERR(0, 633, __pyx_L3_error)
     __pyx_v_n_interpolation_points = __Pyx_PyIndex_AsSsize_t(values[4]); if (unlikely((__pyx_v_n_interpolation_points == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 634, __pyx_L3_error)
-    __pyx_v_dof = __pyx_PyFloat_AsFloat(values[5]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 635, __pyx_L3_error)
+    __pyx_v_dof = __pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 635, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
@@ -12520,7 +12520,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_10estimate_negative_gradient_fft_1d_w
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("estimate_negative_gradient_fft_1d_with_grid", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromFloat(__pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_fft_1d_with_grid(__pyx_v_embedding, __pyx_v_gradient, __pyx_v_y_tilde_values, __pyx_v_box_lower_bounds, __pyx_v_n_interpolation_points, __pyx_v_dof, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 629, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_fft_1d_with_grid(__pyx_v_embedding, __pyx_v_gradient, __pyx_v_y_tilde_values, __pyx_v_box_lower_bounds, __pyx_v_n_interpolation_points, __pyx_v_dof, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 629, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -15597,12 +15597,12 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_13estimate_negative_gradient_fft_2d(P
       __pyx_v_min_num_intervals = ((Py_ssize_t)10);
     }
     if (values[4]) {
-      __pyx_v_ints_in_interval = __pyx_PyFloat_AsFloat(values[4]); if (unlikely((__pyx_v_ints_in_interval == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 748, __pyx_L3_error)
+      __pyx_v_ints_in_interval = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_ints_in_interval == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 748, __pyx_L3_error)
     } else {
       __pyx_v_ints_in_interval = ((double)1.0);
     }
     if (values[5]) {
-      __pyx_v_dof = __pyx_PyFloat_AsFloat(values[5]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 749, __pyx_L3_error)
+      __pyx_v_dof = __pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 749, __pyx_L3_error)
     } else {
       __pyx_v_dof = ((double)1.0);
     }
@@ -15639,7 +15639,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_12estimate_negative_gradient_fft_2d(C
   __pyx_t_2.ints_in_interval = __pyx_v_ints_in_interval;
   __pyx_t_2.dof = __pyx_v_dof;
   __pyx_t_1 = __pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_fft_2d(__pyx_v_embedding, __pyx_v_gradient, 0, &__pyx_t_2); 
-  __pyx_t_3 = PyFloat_FromFloat(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 743, __pyx_L1_error)
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 743, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
@@ -17475,17 +17475,17 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_15prepare_negative_gradient_fft_inter
       __pyx_v_min_num_intervals = ((Py_ssize_t)10);
     }
     if (values[3]) {
-      __pyx_v_ints_in_interval = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_ints_in_interval == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 956, __pyx_L3_error)
+      __pyx_v_ints_in_interval = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_ints_in_interval == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 956, __pyx_L3_error)
     } else {
       __pyx_v_ints_in_interval = ((double)1.0);
     }
     if (values[4]) {
-      __pyx_v_dof = __pyx_PyFloat_AsFloat(values[4]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 957, __pyx_L3_error)
+      __pyx_v_dof = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 957, __pyx_L3_error)
     } else {
       __pyx_v_dof = ((double)1.0);
     }
     if (values[5]) {
-      __pyx_v_padding = __pyx_PyFloat_AsFloat(values[5]); if (unlikely((__pyx_v_padding == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 958, __pyx_L3_error)
+      __pyx_v_padding = __pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_padding == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 958, __pyx_L3_error)
     } else {
       __pyx_v_padding = ((double)0.0);
     }
@@ -18372,7 +18372,7 @@ static double __pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_fft_2d_with_gr
  *     # The phis used here are not affected if dof != 1
  */
     __pyx_t_26 = __pyx_v_i;
-    __pyx_t_8 = PyFloat_FromFloat((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sum_Qi.data) + __pyx_t_26)) )))); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1208, __pyx_L1_error)
+    __pyx_t_8 = PyFloat_FromDouble((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sum_Qi.data) + __pyx_t_26)) )))); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __pyx_t_7 = PyNumber_InPlaceAdd(__pyx_v_sum_Q, __pyx_t_8); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
@@ -18435,7 +18435,7 @@ static double __pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_fft_2d_with_gr
  * 
  *     return sum_Q             # <<<<<<<<<<<<<<
  */
-  __pyx_t_29 = __pyx_PyFloat_AsFloat(__pyx_v_sum_Q); if (unlikely((__pyx_t_29 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1215, __pyx_L1_error)
+  __pyx_t_29 = __pyx_PyFloat_AsDouble(__pyx_v_sum_Q); if (unlikely((__pyx_t_29 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1215, __pyx_L1_error)
   __pyx_r = __pyx_t_29;
   goto __pyx_L0;
 
@@ -18572,7 +18572,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_17estimate_negative_gradient_fft_2d_w
     __pyx_v_box_x_lower_bounds = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_box_x_lower_bounds.memview)) __PYX_ERR(0, 1116, __pyx_L3_error)
     __pyx_v_box_y_lower_bounds = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_box_y_lower_bounds.memview)) __PYX_ERR(0, 1117, __pyx_L3_error)
     __pyx_v_n_interpolation_points = __Pyx_PyIndex_AsSsize_t(values[5]); if (unlikely((__pyx_v_n_interpolation_points == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1118, __pyx_L3_error)
-    __pyx_v_dof = __pyx_PyFloat_AsFloat(values[6]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1119, __pyx_L3_error)
+    __pyx_v_dof = __pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_dof == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1119, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
@@ -18598,7 +18598,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_16estimate_negative_gradient_fft_2d_w
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("estimate_negative_gradient_fft_2d_with_grid", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromFloat(__pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_fft_2d_with_grid(__pyx_v_embedding, __pyx_v_gradient, __pyx_v_y_tilde_values, __pyx_v_box_x_lower_bounds, __pyx_v_box_y_lower_bounds, __pyx_v_n_interpolation_points, __pyx_v_dof, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1112, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_fft_2d_with_grid(__pyx_v_embedding, __pyx_v_gradient, __pyx_v_y_tilde_values, __pyx_v_box_x_lower_bounds, __pyx_v_box_y_lower_bounds, __pyx_v_n_interpolation_points, __pyx_v_dof, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1112, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -34406,7 +34406,7 @@ if (!__Pyx_RefNanny) {
   __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_eps); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_4 = __pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_4 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_4 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_8openTSNE_5_tsne_EPSILON = __pyx_t_4;
 
@@ -36880,7 +36880,7 @@ static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, CYTHON_UNUSED
             PyFPE_START_PROTECT("add", return NULL)
             result = ((double)a) + (double)b;
             PyFPE_END_PROTECT(result)
-            return PyFloat_FromFloat(result);
+            return PyFloat_FromDouble(result);
     }
     return (inplace ? PyNumber_InPlaceAdd : PyNumber_Add)(op1, op2);
 }
@@ -39352,10 +39352,10 @@ __pyx_fail:
 
 /* MemviewDtypeToObject */
   static CYTHON_INLINE PyObject *__pyx_memview_get_double(const char *itemp) {
-    return (PyObject *) PyFloat_FromFloat(*(double *) itemp);
+    return (PyObject *) PyFloat_FromDouble(*(double *) itemp);
 }
 static CYTHON_INLINE int __pyx_memview_set_double(const char *itemp, PyObject *obj) {
-    double value = __pyx_PyFloat_AsFloat(obj);
+    double value = __pyx_PyFloat_AsDouble(obj);
     if ((value == (double)-1) && PyErr_Occurred())
         return 0;
     *(double *) itemp = value;
