@@ -234,6 +234,8 @@ if has_c_library("fftw3"):
         "bigtsne._matrix_mul.matrix_mul",
         ["bigtsne/_matrix_mul/matrix_mul_fftw3.pyx"],
         libraries=["fftw3"],
+        extra_compile_args=["-lfftw3f"],
+        extra_link_args=["-lfftw3f"],
         language="c++",
     )
     extensions.append(extension_)
