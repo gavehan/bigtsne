@@ -351,12 +351,23 @@ def get_knn_index(
         return nearest_neighbors.PrecomputedDistanceMatrix(data, k=k)
 
     preferred_approx_method = nearest_neighbors.Annoy
+    if is_package_installed("faiss") and metric in [
+        "angular",
+        "cosine",
+        "dot",
+        "ip",
+        "l2",
+        "euclidean"
+    ]:
+        preferred_approx_method = nearest_neighbors.IVFSQ
     if is_package_installed("pynndescent") and (sp.issparse(data) or metric not in [
         "cosine",
+        "angular"
         "euclidean",
         "manhattan",
         "hamming",
         "dot",
+        "ip",
         "l1",
         "l2",
         "taxicab",
@@ -374,7 +385,8 @@ def get_knn_index(
         "approx": preferred_approx_method,
         "annoy": nearest_neighbors.Annoy,
         "pynndescent": nearest_neighbors.NNDescent,
-        "hnsw": nearest_neighbors.HNSW
+        "hnsw": nearest_neighbors.HNSW,
+        "faiss": nearest_neighbors.IVFSQ
     }
     if isinstance(method, nearest_neighbors.KNNIndex):
         knn_index = method
@@ -419,7 +431,7 @@ def joint_probabilities_nn(
     distances: np.ndarray
         A `n_samples * k_neighbors` matrix containing the distances to the
         neighbors at indices defined in the neighbors parameter.
-    perplexities: double
+    perplexities: float
         The desired perplexity of the probability distribution.
     symmetrize: bool
         Whether to symmetrize the probability matrix or not. Symmetrizing is
@@ -457,20 +469,21 @@ def joint_probabilities_nn(
         n_reference_samples = n_samples
 
     # Compute asymmetric pairwise input similarities
-    conditional_P = _tsne.compute_gaussian_perplexity(
-        np.array(distances, dtype=float),
-        np.array(perplexities, dtype=float),
+    conditional_p = _tsne.compute_gaussian_perplexity(
+        np.array(distances, dtype=np.single),
+        np.array(perplexities, dtype=np.single),
         num_threads=n_jobs,
     )
-    conditional_P = np.asarray(conditional_P)
+    conditional_p = np.asarray(conditional_p)
 
     P = sp.csr_matrix(
         (
-            conditional_P.ravel(),
+            conditional_p.ravel(),
             neighbors.ravel(),
             range(0, n_samples * k_neighbors + 1, k_neighbors),
         ),
         shape=(n_samples, n_reference_samples),
+        dtype=np.single
     )
 
     # Symmetrize the probability matrix
@@ -593,13 +606,13 @@ class FixedSigmaNN(Affinities):
 
         with utils.Timer("Calculating affinity matrix...", verbose):
             # Compute asymmetric pairwise input similarities
-            conditional_P = np.exp(-(distances ** 2) / (2 * sigma ** 2))
-            conditional_P /= np.sum(conditional_P, axis=1)[:, np.newaxis]
+            conditional_p = np.exp(-(distances ** 2) / (2 * sigma ** 2))
+            conditional_p /= np.sum(conditional_p, axis=1)[:, np.newaxis]
 
             n_samples = self.knn_index.n_samples
             P = sp.csr_matrix(
                 (
-                    conditional_P.ravel(),
+                    conditional_p.ravel(),
                     neighbors.ravel(),
                     range(0, n_samples * k + 1, k),
                 ),
@@ -676,14 +689,14 @@ class FixedSigmaNN(Affinities):
 
         with utils.Timer("Calculating affinity matrix...", self.verbose):
             # Compute asymmetric pairwise input similarities
-            conditional_P = np.exp(-(distances ** 2) / (2 * sigma ** 2))
+            conditional_p = np.exp(-(distances ** 2) / (2 * sigma ** 2))
 
             # Convert weights to probabilities
-            conditional_P /= np.sum(conditional_P, axis=1)[:, np.newaxis]
+            conditional_p /= np.sum(conditional_p, axis=1)[:, np.newaxis]
 
             P = sp.csr_matrix(
                 (
-                    conditional_P.ravel(),
+                    conditional_p.ravel(),
                     neighbors.ravel(),
                     range(0, n_samples * k + 1, k),
                 ),
@@ -803,7 +816,7 @@ class MultiscaleMixture(Affinities):
         self.__neighbors, self.__distances = self.knn_index.build()
 
         with utils.Timer("Calculating affinity matrix...", verbose):
-            self.P = self._calculate_P(
+            self.P = self._calculate_perplexities(
                 self.__neighbors,
                 self.__distances,
                 perplexities,
@@ -817,7 +830,7 @@ class MultiscaleMixture(Affinities):
         self.verbose = verbose
 
     @staticmethod
-    def _calculate_P(
+    def _calculate_perplexities(
         neighbors,
         distances,
         perplexities,
@@ -873,7 +886,7 @@ class MultiscaleMixture(Affinities):
         with utils.Timer(
             "Perplexity changed. Recomputing affinity matrix...", self.verbose
         ):
-            self.P = self._calculate_P(
+            self.P = self._calculate_perplexities(
                 self.__neighbors[:, :k_neighbors],
                 self.__distances[:, :k_neighbors],
                 self.perplexities,
@@ -931,7 +944,7 @@ class MultiscaleMixture(Affinities):
         neighbors, distances = self.knn_index.query(data, k_neighbors)
 
         with utils.Timer("Calculating affinity matrix...", self.verbose):
-            P = self._calculate_P(
+            P = self._calculate_perplexities(
                 neighbors,
                 distances,
                 perplexities,
@@ -1039,7 +1052,7 @@ class Multiscale(MultiscaleMixture):
     """
 
     @staticmethod
-    def _calculate_P(
+    def _calculate_perplexities(
         neighbors,
         distances,
         perplexities,
@@ -1049,7 +1062,7 @@ class Multiscale(MultiscaleMixture):
         n_jobs=1,
     ):
         # Compute normalized probabilities for each perplexity
-        partial_Ps = [
+        partial_ps = [
             joint_probabilities_nn(
                 neighbors,
                 distances,
@@ -1062,7 +1075,7 @@ class Multiscale(MultiscaleMixture):
             for perplexity in perplexities
         ]
         # Sum them together, then normalize
-        P = reduce(operator.add, partial_Ps, 0)
+        P = reduce(operator.add, partial_ps, 0)
 
         # Take care to properly normalize the affinity matrix
         if normalization == "pair-wise":

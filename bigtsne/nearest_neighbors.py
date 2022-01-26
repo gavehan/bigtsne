@@ -1,5 +1,4 @@
 import logging
-import os
 import warnings
 
 import numpy as np
@@ -498,10 +497,7 @@ class NNDescent(KNNIndex):
         import pynndescent
 
         # Will use query() only for k>15
-        if k <= 15:
-            n_neighbors_build = k + 1
-        else:
-            n_neighbors_build = 15
+        n_neighbors_build = k+1 if k <= 15 else 15
 
         self.index = pynndescent.NNDescent(
             data,
@@ -537,10 +533,10 @@ class NNDescent(KNNIndex):
                 np.set_printoptions(**opt)
             else:
                 warnings.warn(
-                    f"`pynndescent` failed to find neighbors for some of the points. "
-                    f"As a workaround, openTSNE considers all such points similar to "
-                    f"each other, so they will likely form a cluster in the embedding. "
-                    f"Run with verbose=True, to see indices of the failed points."
+                    "`pynndescent` failed to find neighbors for some of the points. "
+                    "As a workaround, openTSNE considers all such points similar to "
+                    "each other, so they will likely form a cluster in the embedding. "
+                    "Run with verbose=True, to see indices of the failed points."
                 )
             distances[mask] = 1
             rs = check_random_state(self.random_state)
@@ -708,6 +704,103 @@ class HNSW(KNNIndex):
         self.__dict__.update(state)
 
 
+
+class IVFSQ(KNNIndex):
+    VALID_METRICS = [
+        "angular",
+        "cosine",
+        "dot",
+        "ip",
+        "l2",
+        "euclidean"
+    ]
+
+    def __init__(self, *args, **kwargs):
+        try:
+            import faiss  # pylint: disable=unused-import,unused-variable
+        except ImportError:
+            raise ImportError(
+                "Please install faiss: `conda install -c conda-forge "
+                "faiss` or `pip install faiss`."
+            )
+        super().__init__(*args, **kwargs)
+
+    def build(self):
+        data, k = self.data, self.k
+
+        timer = utils.Timer(
+            f"Finding {k} nearest neighbors using IVFSQ approximate search using "
+            f"{self.metric} distance...",
+            verbose=self.verbose,
+        )
+        timer.__enter__()
+
+        import faiss
+
+        faiss_metric = self.metric
+        faiss_aliases = {
+            "cosine": "angular",
+            "euclidean": "l2",
+            "dot": "ip"
+        }
+        if faiss_metric in faiss_aliases:
+            faiss_metric = faiss_aliases[faiss_metric]
+
+        idx_str = "IVF512,SQfp16"
+        if faiss_metric == "angular":
+            idx_str = f"L2norm,{idx_str}"
+        idx_met = faiss.METRIC_L2 if faiss_metric == "l2" else faiss.METRIC_INNER_PRODUCT
+
+        # No need to set random seed as faiss has pre-set random seed
+        # random_state = check_random_state(self.random_state)
+        faiss.omp_set_num_threads(self.n_jobs)
+
+        # Initialize IVFSQ Index
+        self.index = faiss.index_factory(data.shape[1], idx_str, idx_met)
+
+        # Train and build index tree from data
+        self.index.train(data)
+        self.index.add(data)
+
+        # Set ef parameter for (ideal) precision/recall
+        faiss.extract_index_ivf(self.index).nprobe = 64
+
+        # Query for kNN
+        distances, indices = self.index.search(self.data, self.k+1)
+
+        # Skip first entry, which is always the point itself and square root disatances
+        distances = np.sqrt(np.delete(distances, 0, 1))
+        indices = np.delete(indices, 0, 1)
+
+        # Stop timer
+        timer.__exit__()
+
+        # return indices and distances
+        return indices, distances
+
+    def query(self, query, k):
+        timer = utils.Timer(
+            f"Finding {k} nearest neighbors in existing embedding using IVFSQ "
+            f"approximate search...",
+            self.verbose,
+        )
+        timer.__enter__()
+
+        import faiss
+
+        faiss.omp_set_num_threads(self.n_jobs)
+
+        # Query for kNN
+        distances, indices = self.index.search(query, k)
+        distances = np.sqrt(distances)
+
+        # Stop timer
+        timer.__exit__()
+
+        # return indices and distances
+        return indices, distances
+
+
 class PrecomputedDistanceMatrix(KNNIndex):
     """Use a precomputed distance matrix to construct the KNNG.
 
@@ -737,7 +830,7 @@ class PrecomputedNeighbors(KNNIndex):
 
     Parameters
     ----------
-    neighbors: np.ndarray
+    nn_array: np.ndarray
         A N x K matrix containing the indices of point i's k nearest neighbors.
 
     distances: np.ndarray
@@ -746,10 +839,10 @@ class PrecomputedNeighbors(KNNIndex):
 
     """
 
-    def __init__(self, neighbors, distances):
-        self.distances, self.indices = distances, neighbors
-        self.n_samples = neighbors.shape[0]
-        self.k = neighbors.shape[1]
+    def __init__(self, nn_array, distances):
+        self.distances, self.indices = distances, nn_array
+        self.n_samples = nn_array.shape[0]
+        self.k = nn_array.shape[1]
 
     def build(self):
         return self.indices, self.distances
