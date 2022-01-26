@@ -281,7 +281,7 @@ class Annoy(KNNIndex):
         self.index.build(50, n_jobs=self.n_jobs)
 
         # Return the nearest neighbors in the training set
-        distances = np.zeros((N, k))
+        distances = np.zeros((N, k), dtype=np.single)
         indices = np.zeros((N, k)).astype(int)
 
         def getnns(i):
@@ -315,7 +315,7 @@ class Annoy(KNNIndex):
         timer.__enter__()
 
         N = query.shape[0]
-        distances = np.zeros((N, k))
+        distances = np.zeros((N, k), dtype=np.single)
         indices = np.zeros((N, k)).astype(int)
 
         def getnns(i):

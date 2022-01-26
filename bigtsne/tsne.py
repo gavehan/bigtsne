@@ -14,7 +14,7 @@ from bigtsne.affinity import Affinities, PerplexityBasedNN
 from bigtsne.quad_tree import QuadTree
 from bigtsne import utils
 
-EPSILON = np.finfo(np.float64).eps
+EPSILON = np.finfo(np.single).eps
 
 log = logging.getLogger(__name__)
 
@@ -242,7 +242,7 @@ class PartialTSNEEmbedding(np.ndarray):
     ):
         init_checks.num_samples(embedding.shape[0], P.shape[0])
 
-        obj = np.asarray(embedding, dtype=np.float64, order="C").view(
+        obj = np.asarray(embedding, dtype=np.single, order="C").view(
             PartialTSNEEmbedding
         )
 
@@ -504,7 +504,7 @@ class TSNEEmbedding(np.ndarray):
     ):
         init_checks.num_samples(embedding.shape[0], affinities.P.shape[0])
 
-        obj = np.asarray(embedding, dtype=np.float64, order="C").view(TSNEEmbedding)
+        obj = np.asarray(embedding, dtype=np.single, order="C").view(TSNEEmbedding)
 
         obj.affinities = affinities  # type: Affinities
         obj.gradient_descent_params = gradient_descent_params  # type: dict
@@ -870,7 +870,7 @@ class TSNEEmbedding(np.ndarray):
             init_checks.num_samples(initialization.shape[0], X.shape[0])
             init_checks.num_dimensions(initialization.shape[1], self.shape[1])
 
-            embedding = np.array(initialization)
+            embedding = np.array(initialization, dtype=np.single)
         # Random initialization with isotropic normal distribution
         elif initialization == "random":
             embedding = initialization_scheme.random(
@@ -1069,7 +1069,7 @@ class TSNE(BaseEstimator):
 
     neighbors: str
         Specifies the nearest neighbor method to use. Can be ``exact``, ``annoy``,
-        ``pynndescent``, ``hnsw``, ``approx``, or ``auto`` (default). ``approx`` uses Annoy
+        ``pynndescent``, ``hnsw``, ``faiss``, ``approx``, or ``auto`` (default). ``approx`` uses Annoy
         if the input data matrix is not a sparse object and if Annoy supports
         the given metric. Otherwise it uses Pynndescent. ``auto`` uses exact
         nearest neighbors for N<1000 and the same heuristic as ``approx`` for N>=1000.
@@ -1345,7 +1345,7 @@ class TSNE(BaseEstimator):
             init_checks.num_samples(initialization.shape[0], n_samples)
             init_checks.num_dimensions(initialization.shape[1], self.n_components)
 
-            embedding = np.array(initialization)
+            embedding = np.array(initialization, dtype=np.single)
 
             stddev = np.std(embedding, axis=0)
             if any(stddev > 1e-2):
@@ -1419,7 +1419,7 @@ def kl_divergence_bh(
     n_jobs=1,
     **_,
 ):
-    gradient = np.zeros_like(embedding, dtype=np.float64, order="C")
+    gradient = np.zeros_like(embedding, dtype=np.single, order="C")
 
     # In the event that we wish to embed new points into an existing embedding
     # using simple optimization, we compute optimize the new embedding points
@@ -1474,7 +1474,7 @@ def kl_divergence_fft(
     n_jobs=1,
     **_,
 ):
-    gradient = np.zeros_like(embedding, dtype=np.float64, order="C")
+    gradient = np.zeros_like(embedding, dtype=np.single, order="C")
 
     # Compute negative gradient.
     if embedding.ndim == 1 or embedding.shape[1] == 1:

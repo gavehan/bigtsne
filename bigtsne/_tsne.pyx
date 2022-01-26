@@ -39,8 +39,8 @@ cpdef float[:, ::1] compute_gaussian_perplexity(
         Py_ssize_t n_scales = desired_perplexities.shape[0]
         Py_ssize_t k_neighbors = distances.shape[1]
         float[:, ::1] P = np.zeros_like(distances, dtype=np.single, order="C")
-        float[:, :, ::1] multiscale_P = np.zeros((n_samples, n_scales, k_neighbors))
-        float[:, ::1] tau = np.ones((n_samples, n_scales))
+        float[:, :, ::1] multiscale_P = np.zeros((n_samples, n_scales, k_neighbors), dtype=np.single)
+        float[:, ::1] tau = np.ones((n_samples, n_scales), dtype=np.single)
 
         Py_ssize_t i, j, h, iteration
         float[:] desired_entropies = np.log(desired_perplexities)
@@ -470,7 +470,7 @@ cpdef float estimate_negative_gradient_fft_1d(
                 w_coefficients[box_idx + j, d] += interpolated_values[i, j] * q_j[i, d]
 
     # STEP 2: Compute the kernel values evaluated at the interpolation nodes
-    cdef float[:, ::1] y_tilde_values = np.empty((n_interpolation_points_1d, n_terms))
+    cdef float[:, ::1] y_tilde_values = np.empty((n_interpolation_points_1d, n_terms), dtype=np.single)
     if dof != 1:
         matrix_multiply_fft_1d(sq_kernel_tilde, w_coefficients[:, :2], y_tilde_values[:, :2])
         matrix_multiply_fft_1d(kernel_tilde, w_coefficients[:, 2:], y_tilde_values[:, 2:])
@@ -614,7 +614,7 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_1d(
                 w_coefficients[box_idx + j, d] += reference_interpolated_values[i, j] * q_j[i, d]
 
     # STEP 2: Compute the kernel values evaluated at the interpolation nodes
-    cdef float[:, ::1] y_tilde_values = np.empty((n_interpolation_points_1d, n_terms))
+    cdef float[:, ::1] y_tilde_values = np.empty((n_interpolation_points_1d, n_terms), dtype=np.single)
     if dof != 1:
         matrix_multiply_fft_1d(sq_kernel_tilde, w_coefficients[:, :2], y_tilde_values[:, :2])
         matrix_multiply_fft_1d(kernel_tilde, w_coefficients[:, 2:], y_tilde_values[:, 2:])
@@ -899,7 +899,7 @@ cpdef float estimate_negative_gradient_fft_2d(
                         q_j[i, d]
 
     # STEP 2: Compute the kernel values evaluated at the interpolation nodes
-    cdef float[:, ::1] y_tilde_values = np.empty((total_interpolation_points, n_terms))
+    cdef float[:, ::1] y_tilde_values = np.empty((total_interpolation_points, n_terms), dtype=np.single)
     if dof != 1:
         matrix_multiply_fft_2d(sq_kernel_tilde, w_coefficients[:, :3], y_tilde_values[:, :3])
         matrix_multiply_fft_2d(kernel_tilde, w_coefficients[:, 3:], y_tilde_values[:, 3:])
@@ -1095,7 +1095,7 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_2d(
                         q_j[i, d]
 
     # STEP 2: Compute the kernel values evaluated at the interpolation nodes
-    cdef float[:, ::1] y_tilde_values = np.empty((total_interpolation_points, n_terms))
+    cdef float[:, ::1] y_tilde_values = np.empty((total_interpolation_points, n_terms), dtype=np.single)
     if dof != 1:
         matrix_multiply_fft_2d(sq_kernel_tilde, w_coefficients[:, :3], y_tilde_values[:, :3])
         matrix_multiply_fft_2d(kernel_tilde, w_coefficients[:, 3:], y_tilde_values[:, 3:])
