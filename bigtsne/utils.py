@@ -17,7 +17,7 @@ class Timer:
     def __exit__(self, *args):
         end_time = time()
         if self.verbose:
-            print("   --> Time elapsed: %.2f seconds" % (end_time - self.start_time))
+            print(f"   --> Time elapsed: {(end_time - self.start_time):.2f} seconds")
 
 
 def deprecate_parameter(parameter):
