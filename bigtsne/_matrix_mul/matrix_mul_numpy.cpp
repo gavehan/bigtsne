@@ -742,11 +742,11 @@ static CYTHON_INLINE PyObject* __Pyx_PyNumber_IntOrLong(PyObject* x);
 static CYTHON_INLINE Py_ssize_t __Pyx_PyIndex_AsSsize_t(PyObject*);
 static CYTHON_INLINE PyObject * __Pyx_PyInt_FromSize_t(size_t);
 #if CYTHON_ASSUME_SAFE_MACROS
-#define __pyx_PyFloat_AsDouble(x) (PyFloat_CheckExact(x) ? PyFloat_AS_DOUBLE(x) : PyFloat_AsDouble(x))
+#define __pyx_PyFloat_AsFloat(x) (PyFloat_CheckExact(x) ? PyFloat_AS_DOUBLE(x) : PyFloat_AsFloat(x))
 #else
-#define __pyx_PyFloat_AsDouble(x) PyFloat_AsDouble(x)
+#define __pyx_PyFloat_AsFloat(x) PyFloat_AsFloat(x)
 #endif
-#define __pyx_PyFloat_AsFloat(x) ((float) __pyx_PyFloat_AsDouble(x))
+#define __pyx_PyFloat_AsFloat(x) ((float) __pyx_PyFloat_AsFloat(x))
 #if PY_MAJOR_VERSION >= 3
 #define __Pyx_PyNumber_Int(x) (PyLong_CheckExact(x) ? __Pyx_NewRef(x) : PyNumber_Long(x))
 #else
@@ -3519,7 +3519,7 @@ static void __pyx_f_8openTSNE_11_matrix_mul_10matrix_mul_matrix_multiply_fft_2d(
  */
         __pyx_t_17 = (__pyx_v_n_interpolation_points_1d + __pyx_v_i);
         __pyx_t_16 = (__pyx_v_n_interpolation_points_1d + __pyx_v_j);
-        __pyx_t_1 = PyFloat_FromDouble((*((double *) ( /* dim=1 */ ((char *) (((double *) ( /* dim=0 */ (__pyx_v_fft_out_buffer.data + __pyx_t_17 * __pyx_v_fft_out_buffer.strides[0]) )) + __pyx_t_16)) )))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
+        __pyx_t_1 = PyFloat_FromFloat((*((double *) ( /* dim=1 */ ((char *) (((double *) ( /* dim=0 */ (__pyx_v_fft_out_buffer.data + __pyx_t_17 * __pyx_v_fft_out_buffer.strides[0]) )) + __pyx_t_16)) )))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
 
         /* "openTSNE/_matrix_mul/matrix_mul_numpy.pyx":130
@@ -3530,7 +3530,7 @@ static void __pyx_f_8openTSNE_11_matrix_mul_10matrix_mul_matrix_multiply_fft_2d(
         __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_real); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 130, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_23 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_23 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 130, __pyx_L1_error)
+        __pyx_t_23 = __pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_23 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 130, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
         /* "openTSNE/_matrix_mul/matrix_mul_numpy.pyx":129
@@ -20889,7 +20889,7 @@ static PyObject* __Pyx_PyInt_AddObjC(PyObject *op1, PyObject *op2, CYTHON_UNUSED
             PyFPE_START_PROTECT("add", return NULL)
             result = ((double)a) + (double)b;
             PyFPE_END_PROTECT(result)
-            return PyFloat_FromDouble(result);
+            return PyFloat_FromFloat(result);
     }
     return (inplace ? PyNumber_InPlaceAdd : PyNumber_Add)(op1, op2);
 }
@@ -21623,10 +21623,10 @@ __pyx_capsule_create(void *p, CYTHON_UNUSED const char *sig)
 
 /* MemviewDtypeToObject */
 static CYTHON_INLINE PyObject *__pyx_memview_get_double(const char *itemp) {
-    return (PyObject *) PyFloat_FromDouble(*(double *) itemp);
+    return (PyObject *) PyFloat_FromFloat(*(double *) itemp);
 }
 static CYTHON_INLINE int __pyx_memview_set_double(const char *itemp, PyObject *obj) {
-    double value = __pyx_PyFloat_AsDouble(obj);
+    double value = __pyx_PyFloat_AsFloat(obj);
     if ((value == (double)-1) && PyErr_Occurred())
         return 0;
     *(double *) itemp = value;

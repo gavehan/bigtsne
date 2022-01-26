@@ -244,7 +244,7 @@ get_nns_to_python(const vector<int32_t>& result, const vector<float>& distances,
 
   PyObject* d = PyList_New(distances.size());
   for (size_t i = 0; i < distances.size(); i++)
-    PyList_SetItem(d, i, PyFloat_FromDouble(distances[i]));
+    PyList_SetItem(d, i, PyFloat_FromFloat(distances[i]));
 
   PyObject* t = PyTuple_New(2);
   PyTuple_SetItem(t, 0, l);
@@ -308,7 +308,7 @@ convert_list_to_vector(PyObject* v, int f, vector<float>* w) {
   for (int z = 0; z < f; z++) {
     PyObject *key = PyInt_FromLong(z);
     PyObject *pf = PyObject_GetItem(v, key);
-    (*w)[z] = PyFloat_AsDouble(pf);
+    (*w)[z] = PyFloat_AsFloat(pf);
     Py_DECREF(key);
     Py_DECREF(pf);
   }
@@ -358,7 +358,7 @@ py_an_get_item_vector(py_annoy *self, PyObject *args) {
   self->ptr->get_item(item, &v[0]);
   PyObject* l = PyList_New(self->f);
   for (int z = 0; z < self->f; z++) {
-    PyList_SetItem(l, z, PyFloat_FromDouble(v[z]));
+    PyList_SetItem(l, z, PyFloat_FromFloat(v[z]));
   }
 
   return l;
@@ -474,8 +474,8 @@ py_an_get_distance(py_annoy *self, PyObject *args) {
     return NULL;
   }
 
-  double d = self->ptr->get_distance(i,j);
-  return PyFloat_FromDouble(d);
+  float d = self->ptr->get_distance(i,j);
+  return PyFloat_FromFloat(d);
 }
 
 
