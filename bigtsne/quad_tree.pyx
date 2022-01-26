@@ -25,7 +25,7 @@ I list here several implementation details. Many of these improve efficiency.
     indexing and slicing is slow compared to raw memory access. We can easily
     convert a memory view to a pointer like so: `&mv[0]` however care must be
     taken to ensure the memoryview is a C contigous array. This can be ensured
-    by the type declaration `double[:, ::1]` for 2d arrays.
+    by the type declaration `float[:, ::1]` for 2d arrays.
 
 References
 ----------
@@ -38,13 +38,13 @@ from cpython.mem cimport PyMem_Malloc, PyMem_Free
 
 
 cdef extern from "math.h":
-    double fabs(double x) nogil
+    float fabs(float x) nogil
 
 
-cdef void init_node(Node * node, Py_ssize_t n_dim, double * center, double length):
+cdef void init_node(Node * node, Py_ssize_t n_dim, float * center, float length):
     node.n_dims = n_dim
-    node.center = <double *>PyMem_Malloc(node.n_dims * sizeof(double))
-    node.center_of_mass = <double *>PyMem_Malloc(node.n_dims * sizeof(double))
+    node.center = <float *>PyMem_Malloc(node.n_dims * sizeof(np.single))
+    node.center_of_mass = <float *>PyMem_Malloc(node.n_dims * sizeof(np.single))
     if not node.center or not node.center_of_mass:
         raise MemoryError()
 
@@ -59,7 +59,7 @@ cdef void init_node(Node * node, Py_ssize_t n_dim, double * center, double lengt
     node.num_points = 0
 
 
-cdef Py_ssize_t get_child_idx_for(Node * node, double * point) nogil:
+cdef Py_ssize_t get_child_idx_for(Node * node, float * point) nogil:
     cdef Py_ssize_t idx = 0, d
 
     for d in range(node.n_dims):
@@ -68,7 +68,7 @@ cdef Py_ssize_t get_child_idx_for(Node * node, double * point) nogil:
     return idx
 
 
-cdef inline void update_center_of_mass(Node * node, double * point) nogil:
+cdef inline void update_center_of_mass(Node * node, float * point) nogil:
     cdef Py_ssize_t d
     for d in range(node.n_dims):
         node.center_of_mass[d] = (node.center_of_mass[d] * node.num_points + point[d]) \
@@ -76,7 +76,7 @@ cdef inline void update_center_of_mass(Node * node, double * point) nogil:
     node.num_points += 1
 
 
-cdef void add_point_to(Node * node, double * point):
+cdef void add_point_to(Node * node, float * point):
     # If the node is a leaf node and empty, we"re done
     if node.is_leaf and node.num_points == 0 or is_duplicate(node, point):
         update_center_of_mass(node, point)
@@ -100,7 +100,7 @@ cdef void add_point_to(Node * node, double * point):
 
 
 cdef void split_node(Node * node):
-    cdef double new_length = node.length / 2
+    cdef float new_length = node.length / 2
     cdef Py_ssize_t num_children = 1 << node.n_dims
 
     node.is_leaf = False
@@ -109,7 +109,7 @@ cdef void split_node(Node * node):
         raise MemoryError()
 
     cdef Py_ssize_t i, d
-    cdef double * new_center = <double *>PyMem_Malloc(node.n_dims * sizeof(double))
+    cdef float * new_center = <float *>PyMem_Malloc(node.n_dims * sizeof(np.single))
     if not new_center:
         raise MemoryError()
 
@@ -124,7 +124,7 @@ cdef void split_node(Node * node):
     PyMem_Free(new_center)
 
 
-cdef inline bint is_duplicate(Node * node, double * point, double duplicate_eps=1e-6) nogil:
+cdef inline bint is_duplicate(Node * node, float * point, float duplicate_eps=1e-6) nogil:
     cdef Py_ssize_t d
     for d in range(node.n_dims):
         if fabs(node.center_of_mass[d] - point[d]) >= duplicate_eps:
@@ -145,14 +145,14 @@ cdef void delete_node(Node * node):
 
 
 cdef class QuadTree:
-    def __init__(self, double[:, ::1] data):
+    def __init__(self, float[:, ::1] data):
         cdef:
             Py_ssize_t n_dim = data.shape[1]
-            double[:] x_min = np.min(data, axis=0)
-            double[:] x_max = np.max(data, axis=0)
+            float[:] x_min = np.min(data, axis=0)
+            float[:] x_max = np.max(data, axis=0)
 
-            double[:] center = np.zeros(n_dim)
-            double length = 0
+            float[:] center = np.zeros(n_dim)
+            float length = 0
             Py_ssize_t d
 
         for d in range(n_dim):
@@ -164,12 +164,12 @@ cdef class QuadTree:
         init_node(&self.root, n_dim, &center[0], length)
         self.add_points(data)
 
-    cpdef void add_points(self, double[:, ::1] points):
+    cpdef void add_points(self, float[:, ::1] points):
         cdef Py_ssize_t i
         for i in range(points.shape[0]):
             add_point_to(&self.root, &points[i, 0])
 
-    cpdef void add_point(self, double[::1] point):
+    cpdef void add_point(self, float[::1] point):
         add_point_to(&self.root, &point[0])
 
     def __dealloc__(self):

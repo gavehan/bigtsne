@@ -16,16 +16,16 @@ from ._tsne cimport (
 from ._tsne import estimate_positive_gradient_nn
 
 
-cdef double EPSILON = np.finfo(np.float64).eps
+cdef float EPSILON = np.finfo(np.single).eps
 
 cdef extern from "math.h":
-    double log(double x) nogil
+    float log(float x) nogil
 
 
-cdef sqeuclidean(double[:] x, double[:] y):
+cdef sqeuclidean(float[:] x, float[:] y):
     cdef:
         Py_ssize_t n_dims = x.shape[0]
-        double result = 0
+        float result = 0
         Py_ssize_t i
 
     for i in range(n_dims):
@@ -34,14 +34,14 @@ cdef sqeuclidean(double[:] x, double[:] y):
     return result
 
 
-cpdef double kl_divergence_exact(double[:, ::1] P, double[:, ::1] embedding):
+cpdef float kl_divergence_exact(float[:, ::1] P, float[:, ::1] embedding):
     """Compute the exact KL divergence."""
     cdef:
         Py_ssize_t n_samples = embedding.shape[0]
         Py_ssize_t i, j
 
-        double sum_P = 0, sum_Q = 0, p_ij, q_ij
-        double kl_divergence = 0
+        float sum_P = 0, sum_Q = 0, p_ij, q_ij
+        float kl_divergence = 0
 
     for i in range(n_samples):
         for j in range(n_samples):
@@ -58,13 +58,13 @@ cpdef double kl_divergence_exact(double[:, ::1] P, double[:, ::1] embedding):
     return kl_divergence
 
 
-cpdef double kl_divergence_approx_bh(
+cpdef float kl_divergence_approx_bh(
     int[:] indices,
     int[:] indptr,
-    double[:] P_data,
-    double[:, ::1] embedding,
-    double theta=0.5,
-    double dof=1,
+    float[:] P_data,
+    float[:, ::1] embedding,
+    float theta=0.5,
+    float dof=1,
 ):
     """Compute the KL divergence using the Barnes-Hut approximation."""
     cdef:
@@ -74,10 +74,10 @@ cpdef double kl_divergence_approx_bh(
         QuadTree tree = QuadTree(embedding)
         # We don"t actually care about the gradient, so don"t waste time
         # initializing memory
-        double[:, ::1] gradient = np.empty_like(embedding, dtype=float)
+        float[:, ::1] gradient = np.empty_like(embedding, dtype=np.single)
 
-        double sum_P = 0, sum_Q = 0
-        double kl_divergence = 0
+        float sum_P = 0, sum_Q = 0
+        float kl_divergence = 0
 
     sum_Q = estimate_negative_gradient_bh(tree, embedding, gradient, theta, dof)
     sum_P, kl_divergence = estimate_positive_gradient_nn(
@@ -97,15 +97,15 @@ cpdef double kl_divergence_approx_bh(
 
 
 
-cpdef double kl_divergence_approx_fft(
+cpdef float kl_divergence_approx_fft(
     int[:] indices,
     int[:] indptr,
-    double[:] P_data,
-    double[:, ::1] embedding,
-    double dof=1,
+    float[:] P_data,
+    float[:, ::1] embedding,
+    float dof=1,
     Py_ssize_t n_interpolation_points=3,
     Py_ssize_t min_num_intervals=10,
-    double ints_in_interval=1,
+    float ints_in_interval=1,
 ):
     """Compute the KL divergence using the interpolation based approximation."""
     cdef:
@@ -115,10 +115,10 @@ cpdef double kl_divergence_approx_fft(
 
         # We don"t actually care about the gradient, so don"t waste time
         # initializing memory
-        double[:, ::1] gradient = np.empty_like(embedding, dtype=float)
+        float[:, ::1] gradient = np.empty_like(embedding, dtype=np.single)
 
-        double sum_P = 0, sum_Q = 0
-        double kl_divergence = 0
+        float sum_P = 0, sum_Q = 0
+        float kl_divergence = 0
 
 
     if n_dims == 1:
