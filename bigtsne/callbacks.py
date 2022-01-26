@@ -1,5 +1,6 @@
 import logging
 from functools import partial
+from array import array
 
 import numpy as np
 from scipy.sparse import csr_matrix
@@ -88,9 +89,9 @@ class ErrorApproximations(Callback):
 
     def __init__(self, P: csr_matrix):
         self.P = P.copy()
-        self.exact_errors = []
-        self.bh_errors = []
-        self.fft_errors = []
+        self.exact_errors = array("f")
+        self.bh_errors = array("f")
+        self.fft_errors = array("f")
 
     def __call__(self, iteration: int, error: float, embedding: TSNEEmbedding):
         exact_error = kl_divergence.kl_divergence_exact(self.P.toarray(), embedding)
@@ -106,9 +107,9 @@ class ErrorApproximations(Callback):
         self.fft_errors.append(fft_error)
 
     def report(self):
-        exact_errors = np.array(self.exact_errors)
-        bh_errors = np.array(self.bh_errors)
-        fft_errors = np.array(self.fft_errors)
+        exact_errors = np.array(self.exact_errors, dtype=np.single)
+        bh_errors = np.array(self.bh_errors, dtype=np.single)
+        fft_errors = np.array(self.fft_errors, dtype=np.single)
 
         bh_diff = bh_errors - exact_errors
         print(

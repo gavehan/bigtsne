@@ -143,7 +143,7 @@ def spectral(A, n_components=2, tol=1e-4, max_iter=None, random_state=None, verb
 
     # Find leading eigenvectors
     k = n_components + 1
-    v0 = np.ones(A.shape[0]) / np.sqrt(A.shape[0])
+    v0 = np.ones(A.shape[0], dtype=np.single) / np.sqrt(A.shape[0])
     eigvals, eigvecs = sp.linalg.eigsh(
         A, M=D, k=k, tol=tol, maxiter=max_iter, which="LM", v0=v0
     )
@@ -185,7 +185,7 @@ def weighted_mean(X, embedding, neighbors, distances, verbose=False):
     n_components = embedding.shape[1]
 
     with utils.Timer("Calculating weighted-mean initialization...", verbose):
-        partial_embedding = np.zeros((n_samples, n_components), order="C")
+        partial_embedding = np.zeros((n_samples, n_component), order="C", dtype=np.single)
         for i in range(n_samples):
             partial_embedding[i] = np.average(
                 embedding[neighbors[i]], axis=0, weights=distances[i]
