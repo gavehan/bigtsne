@@ -40,7 +40,7 @@ class TSNE(bigtsne.TSNE):
     def transform(self, X, *args, **kwargs):
         """Apply dimensionality reduction to X.
 
-        See :meth:`openTSNE.TSNEEmbedding.transform` for additional parameters.
+        See :meth:`bigtsne.TSNEEmbedding.transform` for additional parameters.
 
         Parameters
         ----------

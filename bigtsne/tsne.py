@@ -851,7 +851,7 @@ class TSNEEmbedding(np.ndarray):
 
         **affinity_params: dict
             Additional params to be passed to the ``Affinities.to_new`` method.
-            Please see individual :class:`~openTSNE.affinity.Affinities`
+            Please see individual :class:`~bigtsne.affinity.Affinities`
             implementations as the parameters differ between implementations.
 
         Returns
@@ -1188,7 +1188,7 @@ class TSNE(BaseEstimator):
         X: Optional[np.ndarray}
             The data matrix to be embedded.
 
-        affinities: Optional[openTSNE.affinity.Affinities]
+        affinities: Optional[bigtsne.affinity.Affinities]
             A precomputed affinity object. If specified, other affinity-related
             parameters are ignored e.g. `perplexity` and anything nearest-neighbor
             search related.
@@ -1258,7 +1258,7 @@ class TSNE(BaseEstimator):
         X: Optional[np.ndarray}
             The data matrix to be embedded.
 
-        affinities: Optional[openTSNE.affinity.Affinities]
+        affinities: Optional[bigtsne.affinity.Affinities]
             A precomputed affinity object. If specified, other affinity-related
             parameters are ignored e.g. `perplexity` and anything nearest-neighbor
             search related.
@@ -1300,7 +1300,7 @@ class TSNE(BaseEstimator):
         else:
             if not isinstance(affinities, Affinities):
                 raise ValueError(
-                    "`affinities` must be an instance of `openTSNE.affinity.Affinities`"
+                    "`affinities` must be an instance of `bigtsne.affinity.Affinities`"
                 )
             log.info(
                 "Precomputed affinities provided. Ignoring perplexity-related parameters."

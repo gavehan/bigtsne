@@ -127,7 +127,7 @@ class PerplexityBasedNN(Affinities):
         it is set to three times the perplexity.
 
     knn_index: Optional[nearest_neighbors.KNNIndex]
-        Optionally, a precomptued ``openTSNE.nearest_neighbors.KNNIndex`` object
+        Optionally, a precomptued ``bigtsne.nearest_neighbors.KNNIndex`` object
         can be specified. This option will ignore any KNN-related parameters.
         When ``knn_index`` is specified, ``data`` must be set to None.
 
@@ -551,7 +551,7 @@ class FixedSigmaNN(Affinities):
     verbose: bool
 
     knn_index: Optional[nearest_neighbors.KNNIndex]
-        Optionally, a precomptued ``openTSNE.nearest_neighbors.KNNIndex`` object
+        Optionally, a precomptued ``bigtsne.nearest_neighbors.KNNIndex`` object
         can be specified. This option will ignore any KNN-related parameters.
         When ``knn_index`` is specified, ``data`` must be set to None.
 
@@ -761,7 +761,7 @@ class MultiscaleMixture(Affinities):
     verbose: bool
 
     knn_index: Optional[nearest_neighbors.KNNIndex]
-        Optionally, a precomptued ``openTSNE.nearest_neighbors.KNNIndex`` object
+        Optionally, a precomptued ``bigtsne.nearest_neighbors.KNNIndex`` object
         can be specified. This option will ignore any KNN-related parameters.
         When ``knn_index`` is specified, ``data`` must be set to None.
 
@@ -1045,7 +1045,7 @@ class Multiscale(MultiscaleMixture):
     verbose: bool
 
     knn_index: Optional[nearest_neighbors.KNNIndex]
-        Optionally, a precomptued ``openTSNE.nearest_neighbors.KNNIndex`` object
+        Optionally, a precomptued ``bigtsne.nearest_neighbors.KNNIndex`` object
         can be specified. This option will ignore any KNN-related parameters.
         When ``knn_index`` is specified, ``data`` must be set to None.
 
@@ -1130,7 +1130,7 @@ class Uniform(Affinities):
     verbose: bool
 
     knn_index: Optional[nearest_neighbors.KNNIndex]
-        Optionally, a precomptued ``openTSNE.nearest_neighbors.KNNIndex`` object
+        Optionally, a precomptued ``bigtsne.nearest_neighbors.KNNIndex`` object
         can be specified. This option will ignore any KNN-related parameters.
         When ``knn_index`` is specified, ``data`` must be set to None.
 

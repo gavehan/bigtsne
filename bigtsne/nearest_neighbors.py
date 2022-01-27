@@ -454,7 +454,7 @@ class NNDescent(KNNIndex):
         ):
             warnings.warn(
                 "`pynndescent` has recently changed which distance metrics are supported, "
-                "and `openTSNE.nearest_neighbors` has not been updated. Please notify the "
+                "and `bigtsne.nearest_neighbors` has not been updated. Please notify the "
                 "developers of this change."
             )
 
@@ -465,7 +465,7 @@ class NNDescent(KNNIndex):
                 warnings.warn(
                     f"`pynndescent` requires callable metrics to be "
                     f"compiled with `numba`, but `{metric.__name__}` is not compiled. "
-                    f"`openTSNE.nearest_neighbors.NNDescent` "
+                    f"`bigtsne.nearest_neighbors.NNDescent` "
                     f"will attempt to compile the function. "
                     f"If this results in an error, then the function may not be "
                     f"compatible with `numba.njit` and should be rewritten. "

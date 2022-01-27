@@ -114,7 +114,7 @@ class TestTSNEParameterFlow(unittest.TestCase):
         "exaggeration": [None, 2],
         "final_momentum": [0.2, 0.5, 0.8],
     }})
-    @patch("openTSNE.tsne.gradient_descent.__call__")
+    @patch("bigtsne.tsne.gradient_descent.__call__")
     def test_constructor(self, param_name, param_value, gradient_descent):
         # type: (str, Any, MagicMock) -> None
         # Make sure mock still conforms to signature
@@ -143,7 +143,7 @@ class TestTSNEParameterFlow(unittest.TestCase):
         "exaggeration": [None, 2, 5],
         "momentum": [0.2, 0.5, 0.8],
     }})
-    @patch("openTSNE.tsne.gradient_descent.__call__")
+    @patch("bigtsne.tsne.gradient_descent.__call__")
     def test_embedding_optimize(self, param_name, param_value, gradient_descent):
         # type: (str, Any, MagicMock) -> None
         # Make sure mock still conforms to signature
@@ -169,7 +169,7 @@ class TestTSNEParameterFlow(unittest.TestCase):
         "max_grad_norm": [None, 0.5, 1],
         "max_step_norm": [None, 1, 5],
     })
-    @patch("openTSNE.tsne.gradient_descent.__call__")
+    @patch("bigtsne.tsne.gradient_descent.__call__")
     def test_embedding_transform(self, param_name, param_value, gradient_descent):
         # type: (str, Any, MagicMock) -> None
         # Make sure mock still conforms to signature
@@ -200,7 +200,7 @@ class TestTSNEParameterFlow(unittest.TestCase):
         "max_grad_norm": [None, 0.5, 1],
         "max_step_norm": [None, 1, 5],
     }})
-    @patch("openTSNE.tsne.gradient_descent.__call__")
+    @patch("bigtsne.tsne.gradient_descent.__call__")
     def test_partial_embedding_optimize(self, param_name, param_value, gradient_descent):
         # type: (str, Any, MagicMock) -> None
         # Make sure mock still conforms to signature
@@ -591,8 +591,8 @@ class TestRandomState(unittest.TestCase):
             "Same random state produced different partial embeddings",
         )
 
-    @patch("openTSNE.initialization.random", wraps=bigtsne.initialization.random)
-    @patch("openTSNE.nearest_neighbors.Sklearn", wraps=bigtsne.nearest_neighbors.Sklearn)
+    @patch("bigtsne.initialization.random", wraps=bigtsne.initialization.random)
+    @patch("bigtsne.nearest_neighbors.Sklearn", wraps=bigtsne.nearest_neighbors.Sklearn)
     def test_random_state_parameter_is_propagated_random_init_exact(self, init, neighbors):
         random_state = 1
 
@@ -609,8 +609,8 @@ class TestRandomState(unittest.TestCase):
         neighbors.assert_called_once()
         check_mock_called_with_kwargs(neighbors, {"random_state": random_state})
 
-    @patch("openTSNE.initialization.pca", wraps=bigtsne.initialization.pca)
-    @patch("openTSNE.nearest_neighbors.Annoy", wraps=bigtsne.nearest_neighbors.Annoy)
+    @patch("bigtsne.initialization.pca", wraps=bigtsne.initialization.pca)
+    @patch("bigtsne.nearest_neighbors.Annoy", wraps=bigtsne.nearest_neighbors.Annoy)
     def test_random_state_parameter_is_propagated_pca_init_approx(self, init, neighbors):
         random_state = 1
 
