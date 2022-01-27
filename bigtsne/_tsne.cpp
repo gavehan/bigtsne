@@ -5,12 +5,12 @@
     "distutils": {
         "depends": [],
         "language": "c++",
-        "name": "openTSNE._tsne",
+        "name": "bigtsne._tsne",
         "sources": [
             "openTSNE/_tsne.pyx"
         ]
     },
-    "module_name": "openTSNE._tsne"
+    "module_name": "bigtsne._tsne"
 }
 END: Cython Metadata */
 
@@ -2513,7 +2513,7 @@ static PyTypeObject *__pyx_ptype_5numpy_broadcast = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ndarray = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 
-/* Module declarations from 'openTSNE.quad_tree' */
+/* Module declarations from 'bigtsne.quad_tree' */
 static PyTypeObject *__pyx_ptype_8openTSNE_9quad_tree_QuadTree = 0;
 static double *__pyx_vp_8openTSNE_9quad_tree_EPSILON = 0;
 #define __pyx_v_8openTSNE_9quad_tree_EPSILON (*__pyx_vp_8openTSNE_9quad_tree_EPSILON)
@@ -2521,11 +2521,11 @@ static int (*__pyx_f_8openTSNE_9quad_tree_is_duplicate)(__pyx_t_8openTSNE_9quad_
 
 /* Module declarations from 'libc.stdlib' */
 
-/* Module declarations from 'openTSNE._matrix_mul.matrix_mul' */
+/* Module declarations from 'bigtsne._matrix_mul.matrix_mul' */
 static void (*__pyx_f_8openTSNE_11_matrix_mul_10matrix_mul_matrix_multiply_fft_1d)(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice); /*proto*/
 static void (*__pyx_f_8openTSNE_11_matrix_mul_10matrix_mul_matrix_multiply_fft_2d)(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice); /*proto*/
 
-/* Module declarations from 'openTSNE._tsne' */
+/* Module declarations from 'bigtsne._tsne' */
 static PyTypeObject *__pyx_array_type = 0;
 static PyTypeObject *__pyx_MemviewEnum_type = 0;
 static PyTypeObject *__pyx_memoryview_type = 0;
@@ -2592,11 +2592,11 @@ static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, 
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_int32_t = { "int32_t", NULL, sizeof(__pyx_t_5numpy_int32_t), { 0 }, 0, IS_UNSIGNED(__pyx_t_5numpy_int32_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_5numpy_int32_t), 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_int64_t = { "int64_t", NULL, sizeof(__pyx_t_5numpy_int64_t), { 0 }, 0, IS_UNSIGNED(__pyx_t_5numpy_int64_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_5numpy_int64_t), 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
-#define __Pyx_MODULE_NAME "openTSNE._tsne"
+#define __Pyx_MODULE_NAME "bigtsne._tsne"
 extern int __pyx_module_is_main_openTSNE___tsne;
 int __pyx_module_is_main_openTSNE___tsne = 0;
 
-/* Implementation of 'openTSNE._tsne' */
+/* Implementation of 'bigtsne._tsne' */
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_TypeError;
 static PyObject *__pyx_builtin_MemoryError;
@@ -2698,7 +2698,7 @@ static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
 static const char __pyx_k_stringsource[] = "stringsource";
 static const char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
-static const char __pyx_k_openTSNE__tsne[] = "openTSNE._tsne";
+static const char __pyx_k_openTSNE__tsne[] = "bigtsne._tsne";
 static const char __pyx_k_perplexity_tol[] = "perplexity_tol";
 static const char __pyx_k_y_tilde_values[] = "y_tilde_values";
 static const char __pyx_k_View_MemoryView[] = "View.MemoryView";
@@ -4034,7 +4034,7 @@ static __Pyx_memviewslice __pyx_f_8openTSNE_5_tsne_compute_gaussian_perplexity(_
   __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
   __pyx_r.data = NULL;
   __pyx_r.memview = NULL;
-  __Pyx_AddTraceback("openTSNE._tsne.compute_gaussian_perplexity", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.compute_gaussian_perplexity", __pyx_clineno, __pyx_lineno, __pyx_filename);
   goto __pyx_L2;
   __pyx_L0:;
   if (unlikely(!__pyx_r.memview)) {
@@ -4152,7 +4152,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_1compute_gaussian_perplexity(PyObject
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("compute_gaussian_perplexity", 0, 2, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 30, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("openTSNE._tsne.compute_gaussian_perplexity", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.compute_gaussian_perplexity", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -4192,7 +4192,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_compute_gaussian_perplexity(CYTHON_UN
   __pyx_L1_error:;
   __PYX_XDEC_MEMVIEW(&__pyx_t_1, 1);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("openTSNE._tsne.compute_gaussian_perplexity", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.compute_gaussian_perplexity", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_distances, 1);
@@ -4286,7 +4286,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_3estimate_positive_gradient_nn(PyObje
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 103, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("openTSNE._tsne.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -4738,7 +4738,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_2estimate_positive_gradient_nn(CYTHON
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
   __Pyx_XDECREF(__pyx_t_14);
-  __Pyx_AddTraceback("openTSNE._tsne.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_dest_sig);
@@ -5352,7 +5352,7 @@ static PyObject *__pyx_fuse_0__pyx_f_8openTSNE_5_tsne_estimate_positive_gradient
   __Pyx_XDECREF(__pyx_t_16);
   __Pyx_XDECREF(__pyx_t_17);
   __Pyx_XDECREF(__pyx_t_18);
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -5508,7 +5508,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_19__pyx_fuse_0estimate_positive_gradi
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("__pyx_fuse_0estimate_positive_gradient_nn", 0, 6, 9, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 103, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("openTSNE._tsne.__pyx_fuse_0estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.__pyx_fuse_0estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -5542,7 +5542,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_18__pyx_fuse_0estimate_positive_gradi
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("openTSNE._tsne.__pyx_fuse_0estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.__pyx_fuse_0estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_indices, 1);
@@ -6152,7 +6152,7 @@ static PyObject *__pyx_fuse_1__pyx_f_8openTSNE_5_tsne_estimate_positive_gradient
   __Pyx_XDECREF(__pyx_t_16);
   __Pyx_XDECREF(__pyx_t_17);
   __Pyx_XDECREF(__pyx_t_18);
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -6308,7 +6308,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_21__pyx_fuse_1estimate_positive_gradi
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("__pyx_fuse_1estimate_positive_gradient_nn", 0, 6, 9, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 103, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("openTSNE._tsne.__pyx_fuse_1estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.__pyx_fuse_1estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -6342,7 +6342,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_20__pyx_fuse_1estimate_positive_gradi
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("openTSNE._tsne.__pyx_fuse_1estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.__pyx_fuse_1estimate_positive_gradient_nn", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_indices, 1);
@@ -6710,7 +6710,7 @@ static double __pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_bh(struct __py
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
-  __Pyx_WriteUnraisable("openTSNE._tsne.estimate_negative_gradient_bh", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("bigtsne._tsne.estimate_negative_gradient_bh", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_sum_Qi, 1);
@@ -6857,7 +6857,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_5estimate_negative_gradient_bh(PyObje
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("estimate_negative_gradient_bh", 0, 3, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 172, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_negative_gradient_bh", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_negative_gradient_bh", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -6907,7 +6907,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_4estimate_negative_gradient_bh(CYTHON
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_negative_gradient_bh", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_negative_gradient_bh", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_embedding, 1);
@@ -7824,7 +7824,7 @@ static __Pyx_memviewslice __pyx_f_8openTSNE_5_tsne_interpolate(__Pyx_memviewslic
   __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
   __pyx_r.data = NULL;
   __pyx_r.memview = NULL;
-  __Pyx_AddTraceback("openTSNE._tsne.interpolate", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.interpolate", __pyx_clineno, __pyx_lineno, __pyx_filename);
   goto __pyx_L2;
   __pyx_L0:;
   if (unlikely(!__pyx_r.memview)) {
@@ -8049,7 +8049,7 @@ static __Pyx_memviewslice __pyx_f_8openTSNE_5_tsne_compute_kernel_tilde_1d(doubl
   __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
   __pyx_r.data = NULL;
   __pyx_r.memview = NULL;
-  __Pyx_AddTraceback("openTSNE._tsne.compute_kernel_tilde_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.compute_kernel_tilde_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   goto __pyx_L2;
   __pyx_L0:;
   if (unlikely(!__pyx_r.memview)) {
@@ -10122,7 +10122,7 @@ __pyx_f_8openTSNE_11_matrix_mul_10matrix_mul_matrix_multiply_fft_1d(__pyx_v_kern
   __PYX_XDEC_MEMVIEW(&__pyx_t_14, 1);
   __Pyx_XDECREF(__pyx_t_23);
   __PYX_XDEC_MEMVIEW(&__pyx_t_24, 1);
-  __Pyx_WriteUnraisable("openTSNE._tsne.estimate_negative_gradient_fft_1d", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("bigtsne._tsne.estimate_negative_gradient_fft_1d", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_recommended_boxes);
@@ -10260,7 +10260,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_7estimate_negative_gradient_fft_1d(Py
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("estimate_negative_gradient_fft_1d", 0, 2, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 358, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_negative_gradient_fft_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_negative_gradient_fft_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -10297,7 +10297,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_6estimate_negative_gradient_fft_1d(CY
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_negative_gradient_fft_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_negative_gradient_fft_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_embedding, 1);
@@ -11535,7 +11535,7 @@ __pyx_f_8openTSNE_11_matrix_mul_10matrix_mul_matrix_multiply_fft_1d(__pyx_v_kern
   __PYX_XDEC_MEMVIEW(&__pyx_t_14, 1);
   __Pyx_XDECREF(__pyx_t_23);
   __PYX_XDEC_MEMVIEW(&__pyx_t_24, 1);
-  __Pyx_AddTraceback("openTSNE._tsne.prepare_negative_gradient_fft_interpolation_grid_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.prepare_negative_gradient_fft_interpolation_grid_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_box_lower_bounds, 1);
@@ -11677,7 +11677,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_9prepare_negative_gradient_fft_interp
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("prepare_negative_gradient_fft_interpolation_grid_1d", 0, 1, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 511, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("openTSNE._tsne.prepare_negative_gradient_fft_interpolation_grid_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.prepare_negative_gradient_fft_interpolation_grid_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -11713,7 +11713,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_8prepare_negative_gradient_fft_interp
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("openTSNE._tsne.prepare_negative_gradient_fft_interpolation_grid_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.prepare_negative_gradient_fft_interpolation_grid_1d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_reference_embedding, 1);
@@ -12391,7 +12391,7 @@ static double __pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_fft_1d_with_gr
   __Pyx_XDECREF(__pyx_t_10);
   __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_13, 1);
-  __Pyx_WriteUnraisable("openTSNE._tsne.estimate_negative_gradient_fft_1d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("bigtsne._tsne.estimate_negative_gradient_fft_1d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_y_tilde, 1);
@@ -12500,7 +12500,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_11estimate_negative_gradient_fft_1d_w
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("estimate_negative_gradient_fft_1d_with_grid", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 629, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_negative_gradient_fft_1d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_negative_gradient_fft_1d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -12529,7 +12529,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_10estimate_negative_gradient_fft_1d_w
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_negative_gradient_fft_1d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_negative_gradient_fft_1d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_embedding, 1);
@@ -12865,7 +12865,7 @@ static __Pyx_memviewslice __pyx_f_8openTSNE_5_tsne_compute_kernel_tilde_2d(doubl
   __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
   __pyx_r.data = NULL;
   __pyx_r.memview = NULL;
-  __Pyx_AddTraceback("openTSNE._tsne.compute_kernel_tilde_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.compute_kernel_tilde_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   goto __pyx_L2;
   __pyx_L0:;
   if (unlikely(!__pyx_r.memview)) {
@@ -15469,7 +15469,7 @@ __pyx_f_8openTSNE_11_matrix_mul_10matrix_mul_matrix_multiply_fft_2d(__pyx_v_kern
   __PYX_XDEC_MEMVIEW(&__pyx_t_16, 1);
   __Pyx_XDECREF(__pyx_t_30);
   __PYX_XDEC_MEMVIEW(&__pyx_t_31, 1);
-  __Pyx_WriteUnraisable("openTSNE._tsne.estimate_negative_gradient_fft_2d", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("bigtsne._tsne.estimate_negative_gradient_fft_2d", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_recommended_boxes);
@@ -15611,7 +15611,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_13estimate_negative_gradient_fft_2d(P
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("estimate_negative_gradient_fft_2d", 0, 2, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 743, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_negative_gradient_fft_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_negative_gradient_fft_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -15648,7 +15648,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_12estimate_negative_gradient_fft_2d(C
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_negative_gradient_fft_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_negative_gradient_fft_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_embedding, 1);
@@ -17348,7 +17348,7 @@ __pyx_f_8openTSNE_11_matrix_mul_10matrix_mul_matrix_multiply_fft_2d(__pyx_v_kern
   __Pyx_XDECREF(__pyx_t_30);
   __PYX_XDEC_MEMVIEW(&__pyx_t_31, 1);
   __Pyx_XDECREF(__pyx_t_32);
-  __Pyx_AddTraceback("openTSNE._tsne.prepare_negative_gradient_fft_interpolation_grid_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.prepare_negative_gradient_fft_interpolation_grid_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_box_x_lower_bounds, 1);
@@ -17494,7 +17494,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_15prepare_negative_gradient_fft_inter
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("prepare_negative_gradient_fft_interpolation_grid_2d", 0, 1, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 952, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("openTSNE._tsne.prepare_negative_gradient_fft_interpolation_grid_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.prepare_negative_gradient_fft_interpolation_grid_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -17530,7 +17530,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_14prepare_negative_gradient_fft_inter
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("openTSNE._tsne.prepare_negative_gradient_fft_interpolation_grid_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.prepare_negative_gradient_fft_interpolation_grid_2d", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_reference_embedding, 1);
@@ -18455,7 +18455,7 @@ static double __pyx_f_8openTSNE_5_tsne_estimate_negative_gradient_fft_2d_with_gr
   __Pyx_XDECREF(__pyx_t_10);
   __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_13, 1);
-  __Pyx_WriteUnraisable("openTSNE._tsne.estimate_negative_gradient_fft_2d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
+  __Pyx_WriteUnraisable("bigtsne._tsne.estimate_negative_gradient_fft_2d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_y_tilde, 1);
@@ -18578,7 +18578,7 @@ static PyObject *__pyx_pw_8openTSNE_5_tsne_17estimate_negative_gradient_fft_2d_w
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("estimate_negative_gradient_fft_2d_with_grid", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 1112, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_negative_gradient_fft_2d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_negative_gradient_fft_2d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -18607,7 +18607,7 @@ static PyObject *__pyx_pf_8openTSNE_5_tsne_16estimate_negative_gradient_fft_2d_w
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("openTSNE._tsne.estimate_negative_gradient_fft_2d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("bigtsne._tsne.estimate_negative_gradient_fft_2d_with_grid", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_embedding, 1);
@@ -32603,7 +32603,7 @@ static PyBufferProcs __pyx_tp_as_buffer_array = {
 
 static PyTypeObject __pyx_type___pyx_array = {
   PyVarObject_HEAD_INIT(0, 0)
-  "openTSNE._tsne.array", /*tp_name*/
+  "bigtsne._tsne.array", /*tp_name*/
   sizeof(struct __pyx_array_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_array, /*tp_dealloc*/
@@ -32722,7 +32722,7 @@ static PyMethodDef __pyx_methods_Enum[] = {
 
 static PyTypeObject __pyx_type___pyx_MemviewEnum = {
   PyVarObject_HEAD_INIT(0, 0)
-  "openTSNE._tsne.Enum", /*tp_name*/
+  "bigtsne._tsne.Enum", /*tp_name*/
   sizeof(struct __pyx_MemviewEnum_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_Enum, /*tp_dealloc*/
@@ -32983,7 +32983,7 @@ static PyBufferProcs __pyx_tp_as_buffer_memoryview = {
 
 static PyTypeObject __pyx_type___pyx_memoryview = {
   PyVarObject_HEAD_INIT(0, 0)
-  "openTSNE._tsne.memoryview", /*tp_name*/
+  "bigtsne._tsne.memoryview", /*tp_name*/
   sizeof(struct __pyx_memoryview_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_memoryview, /*tp_dealloc*/
@@ -33121,7 +33121,7 @@ static struct PyGetSetDef __pyx_getsets__memoryviewslice[] = {
 
 static PyTypeObject __pyx_type___pyx_memoryviewslice = {
   PyVarObject_HEAD_INIT(0, 0)
-  "openTSNE._tsne._memoryviewslice", /*tp_name*/
+  "bigtsne._tsne._memoryviewslice", /*tp_name*/
   sizeof(struct __pyx_memoryviewslice_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc__memoryviewslice, /*tp_dealloc*/
@@ -34104,9 +34104,9 @@ static int __Pyx_modinit_type_import_code(void) {
   __pyx_ptype_5numpy_ufunc = __Pyx_ImportType(__pyx_t_1, "numpy", "ufunc", sizeof(PyUFuncObject), __Pyx_ImportType_CheckSize_Ignore);
    if (!__pyx_ptype_5numpy_ufunc) __PYX_ERR(1, 764, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyImport_ImportModule("openTSNE.quad_tree"); if (unlikely(!__pyx_t_1)) __PYX_ERR(4, 25, __pyx_L1_error)
+  __pyx_t_1 = PyImport_ImportModule("bigtsne.quad_tree"); if (unlikely(!__pyx_t_1)) __PYX_ERR(4, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_ptype_8openTSNE_9quad_tree_QuadTree = __Pyx_ImportType(__pyx_t_1, "openTSNE.quad_tree", "QuadTree", sizeof(struct __pyx_obj_8openTSNE_9quad_tree_QuadTree), __Pyx_ImportType_CheckSize_Warn);
+  __pyx_ptype_8openTSNE_9quad_tree_QuadTree = __Pyx_ImportType(__pyx_t_1, "bigtsne.quad_tree", "QuadTree", sizeof(struct __pyx_obj_8openTSNE_9quad_tree_QuadTree), __Pyx_ImportType_CheckSize_Warn);
    if (!__pyx_ptype_8openTSNE_9quad_tree_QuadTree) __PYX_ERR(4, 25, __pyx_L1_error)
   __pyx_vtabptr_8openTSNE_9quad_tree_QuadTree = (struct __pyx_vtabstruct_8openTSNE_9quad_tree_QuadTree*)__Pyx_GetVtable(__pyx_ptype_8openTSNE_9quad_tree_QuadTree->tp_dict); if (unlikely(!__pyx_vtabptr_8openTSNE_9quad_tree_QuadTree)) __PYX_ERR(4, 25, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -34126,7 +34126,7 @@ static int __Pyx_modinit_variable_import_code(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_variable_import_code", 0);
   /*--- Variable import code ---*/
-  __pyx_t_1 = PyImport_ImportModule("openTSNE.quad_tree"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_t_1 = PyImport_ImportModule("bigtsne.quad_tree"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (__Pyx_ImportVoidPtr(__pyx_t_1, "EPSILON", (void **)&__pyx_vp_8openTSNE_9quad_tree_EPSILON, "double") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -34146,11 +34146,11 @@ static int __Pyx_modinit_function_import_code(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_import_code", 0);
   /*--- Function import code ---*/
-  __pyx_t_1 = PyImport_ImportModule("openTSNE.quad_tree"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_t_1 = PyImport_ImportModule("bigtsne.quad_tree"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (__Pyx_ImportFunction(__pyx_t_1, "is_duplicate", (void (**)(void))&__pyx_f_8openTSNE_9quad_tree_is_duplicate, "int (__pyx_t_8openTSNE_9quad_tree_Node *, double *, struct __pyx_opt_args_8openTSNE_9quad_tree_is_duplicate *__pyx_optional_args)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyImport_ImportModule("openTSNE._matrix_mul.matrix_mul"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_t_1 = PyImport_ImportModule("bigtsne._matrix_mul.matrix_mul"); if (!__pyx_t_1) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (__Pyx_ImportFunction(__pyx_t_1, "matrix_multiply_fft_1d", (void (**)(void))&__pyx_f_8openTSNE_11_matrix_mul_10matrix_mul_matrix_multiply_fft_1d, "void (__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (__Pyx_ImportFunction(__pyx_t_1, "matrix_multiply_fft_2d", (void (**)(void))&__pyx_f_8openTSNE_11_matrix_mul_10matrix_mul_matrix_multiply_fft_2d, "void (__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -34348,8 +34348,8 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "openTSNE._tsne")) {
-      if (unlikely(PyDict_SetItemString(modules, "openTSNE._tsne", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "bigtsne._tsne")) {
+      if (unlikely(PyDict_SetItemString(modules, "bigtsne._tsne", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -34665,11 +34665,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_5);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init openTSNE._tsne", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init bigtsne._tsne", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init openTSNE._tsne");
+    PyErr_SetString(PyExc_ImportError, "init bigtsne._tsne");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
