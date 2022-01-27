@@ -1,6 +1,7 @@
 import distutils
 import platform
 import sys
+import glob
 import tempfile
 import warnings
 from distutils import ccompiler
@@ -62,18 +63,24 @@ class GetNumpyInclude:
 
 def get_include_dirs():
     """Get include dirs for the compiler."""
-    return (
-        path.join(sys.prefix, "include"),
-        path.join(sys.prefix, "Library", "include"),
-    )
+    ret = [path.join(sys.prefix, "include")]
+    for inc_dir in glob.glob(path.join(sys.prefix, "*/include")):
+        ret.append(inc_dir)
+    return ret
 
 
 def get_library_dirs():
     """Get library dirs for the compiler."""
-    return (
-        path.join(sys.prefix, "lib"),
-        path.join(sys.prefix, "Library", "lib"),
-    )
+    ret = [path.join(sys.prefix, "lib")]
+    for lib_dir in glob.glob(path.join(sys.prefix, "*/lib")):
+        ret.append(lib_dir)
+    return ret
+
+
+def get_sysroot_dir():
+    """Get sysroot dir for the compiler."""
+    sr_dirs = glob.glob(path.join(sys.prefix, "*/sysroot"))
+    return sr_dirs[0] if len(sr_dirs) > 0 else None
 
 
 def has_c_library(library, extension=".c"):
@@ -136,6 +143,11 @@ class CythonBuildExt(build_ext):
         compiler = self.compiler.compiler_type
         if compiler == "unix":
             extra_compile_args += ["-O3"]
+            # Allow conda env compilers
+            if get_sysroot_dir() is not None:
+                print(f"{'-'*16} sysroot dir {'-'*16}")
+                print(get_sysroot_dir())
+                extra_compile_args += [f"--sysroot={get_sysroot_dir()}"]
         elif compiler == "msvc":
             extra_compile_args += ["/Ox", "/fp:fast"]
 
@@ -196,13 +208,20 @@ class CythonBuildExt(build_ext):
             extension.extra_link_args += extra_link_args
 
         # Add numpy and system include directories
-        for extension in self.extensions:
-            extension.include_dirs.extend(get_include_dirs())
-            extension.include_dirs.append(GetNumpyInclude())
+        if len(get_include_dirs()) > 0:
+            print(f"{'-'*16} include dirs {'-'*16}")
+            print(get_include_dirs())
+            for extension in self.extensions:
+                extension.include_dirs = get_include_dirs() + extension.include_dirs
+                extension.include_dirs.insert(0, GetNumpyInclude())
 
-        # Add numpy and system include directories
-        for extension in self.extensions:
-            extension.library_dirs.extend(get_library_dirs())
+        # Add system library directories
+        if len(get_library_dirs()) > 0:
+            print(f"{'-'*16} lib dirs {'-'*16}")
+            print(get_library_dirs())
+            for extension in self.extensions:
+                extension.library_dirs = get_library_dirs() + extension.library_dirs
+                extension.runtime_library_dirs = get_library_dirs() + extension.library_dirs
 
         super().build_extensions()
 
