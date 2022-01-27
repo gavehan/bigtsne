@@ -203,10 +203,6 @@ class CythonBuildExt(build_ext):
         # Add numpy and system include directories
         for extension in self.extensions:
             extension.library_dirs.extend(get_library_dirs())
-        
-        # Add conda include dirs
-        for inc_dir in get_include_dirs():
-            self.compiler.add_include_dir(inc_dir)
 
         super().build_extensions()
 
