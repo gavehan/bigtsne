@@ -23,7 +23,7 @@ cdef extern from "math.h":
     float exp(float x) nogil
     float fabs(float x) nogil
     float fmax(float x, float y) nogil
-    float isinf(long float) nogil
+    float isinf(float) nogil
     float INFINITY
 
 
