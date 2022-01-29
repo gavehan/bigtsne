@@ -472,8 +472,8 @@ def joint_probabilities_nn(
 
     # Compute asymmetric pairwise input similarities
     conditional_p = _tsne.compute_gaussian_perplexity(
-        np.array(distances).astype(np.single),
-        np.array(perplexities).astype(np.single),
+        np.ascontiguousarray(np.array(distances), dtype=np.single),
+        np.ascontiguousarray(np.array(perplexities), dtype=np.single),
         num_threads=n_jobs,
     )
     conditional_p = np.asarray(conditional_p)
@@ -816,8 +816,6 @@ class MultiscaleMixture(Affinities):
             log.info("KNN index provided. Ignoring KNN-related parameters.")
 
         self.__neighbors, self.__distances = self.knn_index.build()
-
-        print(f"neighbors: {type(self.__neighbors)} / ditances: {type(self.__distances)}")
 
         with utils.Timer("Calculating affinity matrix...", verbose):
             self.P = self._calculate_perplexities(
