@@ -472,8 +472,8 @@ def joint_probabilities_nn(
 
     # Compute asymmetric pairwise input similarities
     conditional_p = _tsne.compute_gaussian_perplexity(
-        np.array(distances, dtype=np.single),
-        np.array(perplexities, dtype=np.single),
+        np.array(distances).astype(np.single),
+        np.array(perplexities).astype(np.single),
         num_threads=n_jobs,
     )
     conditional_p = np.asarray(conditional_p)
