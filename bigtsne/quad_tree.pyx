@@ -43,8 +43,8 @@ cdef extern from "math.h":
 
 cdef void init_node(Node * node, Py_ssize_t n_dim, float * center, float length):
     node.n_dims = n_dim
-    node.center = <float *>PyMem_Malloc(node.n_dims * sizeof(np.single))
-    node.center_of_mass = <float *>PyMem_Malloc(node.n_dims * sizeof(np.single))
+    node.center = <float *>PyMem_Malloc(node.n_dims * sizeof(float))
+    node.center_of_mass = <float *>PyMem_Malloc(node.n_dims * sizeof(float))
     if not node.center or not node.center_of_mass:
         raise MemoryError()
 
@@ -109,7 +109,7 @@ cdef void split_node(Node * node):
         raise MemoryError()
 
     cdef Py_ssize_t i, d
-    cdef float * new_center = <float *>PyMem_Malloc(node.n_dims * sizeof(np.single))
+    cdef float * new_center = <float *>PyMem_Malloc(node.n_dims * sizeof(float))
     if not new_center:
         raise MemoryError()
 

@@ -16,7 +16,7 @@ from ._tsne cimport (
 from ._tsne import estimate_positive_gradient_nn
 
 
-cdef float EPSILON = np.finfo(np.single).eps
+cdef float EPSILON = np.finfo(float).eps
 
 cdef extern from "math.h":
     float log(float x) nogil

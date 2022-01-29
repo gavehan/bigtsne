@@ -14,7 +14,7 @@ from .quad_tree cimport QuadTree, Node, is_duplicate
 from ._matrix_mul.matrix_mul cimport matrix_multiply_fft_1d, matrix_multiply_fft_2d
 
 
-cdef float EPSILON = np.finfo(np.single).eps
+cdef float EPSILON = np.finfo(float).eps
 
 
 cdef extern from "math.h":

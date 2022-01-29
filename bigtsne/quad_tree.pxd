@@ -5,7 +5,7 @@
 # cython: language_level=3
 import numpy as np
 
-cdef float EPSILON = np.finfo(np.single).eps
+cdef float EPSILON = np.finfo(float).eps
 
 ctypedef struct Node:
     Py_ssize_t n_dims
