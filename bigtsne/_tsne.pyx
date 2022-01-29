@@ -40,7 +40,8 @@ cpdef float[:, ::1] compute_gaussian_perplexity(
         Py_ssize_t n_scales = desired_perplexities.shape[0]
         Py_ssize_t k_neighbors = distances.shape[1]
         float[:, ::1] P = np.zeros_like(distances, dtype=float, order="C")
-        print("P assigned...")
+    print("P assigned...")
+    cdef:
         float[:, :, ::1] multiscale_P = np.zeros((n_samples, n_scales, k_neighbors), dtype=float)
         float[:, ::1] tau = np.ones((n_samples, n_scales), dtype=float)
 
