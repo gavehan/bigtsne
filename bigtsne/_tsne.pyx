@@ -38,7 +38,7 @@ cpdef np.ndarray compute_gaussian_perplexity(
     Py_ssize_t max_iter=200,
     Py_ssize_t num_threads=1,
 ):
-    assert distances.dtype == np.single and desired_perplexities.dtype == np.single
+    assert distances.dtype == float and desired_perplexities.dtype == float
     cdef Py_ssize_t n_samples = distances.shape[0]
     cdef Py_ssize_t n_scales = desired_perplexities.shape[0]
     cdef Py_ssize_t k_neighbors = distances.shape[1]
