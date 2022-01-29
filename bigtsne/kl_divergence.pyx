@@ -74,7 +74,7 @@ cpdef float kl_divergence_approx_bh(
         QuadTree tree = QuadTree(embedding)
         # We don"t actually care about the gradient, so don"t waste time
         # initializing memory
-        float[:, ::1] gradient = np.empty_like(embedding, dtype=np.single)
+        float[:, ::1] gradient = np.empty_like(embedding, dtype=float)
 
         float sum_P = 0, sum_Q = 0
         float kl_divergence = 0
@@ -115,7 +115,7 @@ cpdef float kl_divergence_approx_fft(
 
         # We don"t actually care about the gradient, so don"t waste time
         # initializing memory
-        float[:, ::1] gradient = np.empty_like(embedding, dtype=np.single)
+        float[:, ::1] gradient = np.empty_like(embedding, dtype=float)
 
         float sum_P = 0, sum_Q = 0
         float kl_divergence = 0

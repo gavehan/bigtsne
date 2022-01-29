@@ -2635,15 +2635,15 @@ static void __pyx_f_7bigtsne_11_matrix_mul_10matrix_mul_matrix_multiply_fft_1d(_
  *         Py_ssize_t n_terms = w_coefficients.shape[1]
  *         Py_ssize_t n_fft_coeffs = kernel_tilde.shape[0]             # <<<<<<<<<<<<<<
  * 
- *         complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs, dtype=np.csingle)
+ *         complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs, dtype=complex)
  */
   __pyx_v_n_fft_coeffs = (__pyx_v_kernel_tilde.shape[0]);
 
   /* "bigtsne/_matrix_mul/matrix_mul_fftw3.pyx":61
  *         Py_ssize_t n_fft_coeffs = kernel_tilde.shape[0]
  * 
- *         complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs, dtype=np.csingle)             # <<<<<<<<<<<<<<
- *         complex[::1] fft_w_coeffs = np.empty(n_fft_coeffs, dtype=np.csingle)
+ *         complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs, dtype=complex)             # <<<<<<<<<<<<<<
+ *         complex[::1] fft_w_coeffs = np.empty(n_fft_coeffs, dtype=complex)
  *         # Note that we can't use the same buffer for the input and output since
  */
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 61, __pyx_L1_error)
@@ -2680,8 +2680,8 @@ static void __pyx_f_7bigtsne_11_matrix_mul_10matrix_mul_matrix_multiply_fft_1d(_
 
   /* "bigtsne/_matrix_mul/matrix_mul_fftw3.pyx":62
  * 
- *         complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs, dtype=np.csingle)
- *         complex[::1] fft_w_coeffs = np.empty(n_fft_coeffs, dtype=np.csingle)             # <<<<<<<<<<<<<<
+ *         complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs, dtype=complex)
+ *         complex[::1] fft_w_coeffs = np.empty(n_fft_coeffs, dtype=complex)             # <<<<<<<<<<<<<<
  *         # Note that we can't use the same buffer for the input and output since
  *         # we only write to the first half of the vector - we'd need to
  */
@@ -2720,8 +2720,8 @@ static void __pyx_f_7bigtsne_11_matrix_mul_10matrix_mul_matrix_multiply_fft_1d(_
   /* "bigtsne/_matrix_mul/matrix_mul_fftw3.pyx":68
  *         # changed during the IDFT, so it's faster to use two buffers, at the
  *         # cost of some memory
- *         float[::1] fft_in_buffer = np.zeros(n_fft_coeffs, dtype=np.single)             # <<<<<<<<<<<<<<
- *         float[::1] fft_out_buffer = np.zeros(n_fft_coeffs, dtype=np.single)
+ *         float[::1] fft_in_buffer = np.zeros(n_fft_coeffs, dtype=float)             # <<<<<<<<<<<<<<
+ *         float[::1] fft_out_buffer = np.zeros(n_fft_coeffs, dtype=float)
  * 
  */
   __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 68, __pyx_L1_error)
@@ -2758,8 +2758,8 @@ static void __pyx_f_7bigtsne_11_matrix_mul_10matrix_mul_matrix_multiply_fft_1d(_
 
   /* "bigtsne/_matrix_mul/matrix_mul_fftw3.pyx":69
  *         # cost of some memory
- *         float[::1] fft_in_buffer = np.zeros(n_fft_coeffs, dtype=np.single)
- *         float[::1] fft_out_buffer = np.zeros(n_fft_coeffs, dtype=np.single)             # <<<<<<<<<<<<<<
+ *         float[::1] fft_in_buffer = np.zeros(n_fft_coeffs, dtype=float)
+ *         float[::1] fft_out_buffer = np.zeros(n_fft_coeffs, dtype=float)             # <<<<<<<<<<<<<<
  * 
  *         Py_ssize_t d, i
  */
@@ -3122,8 +3122,8 @@ static void __pyx_f_7bigtsne_11_matrix_mul_10matrix_mul_matrix_multiply_fft_2d(_
   /* "bigtsne/_matrix_mul/matrix_mul_fftw3.pyx":146
  * 
  *         fftwf_plan plan_dft, plan_idft
- *         complex[::1] fft_w_coefficients = np.empty(n_fft_coeffs * (n_fft_coeffs / 2 + 1), dtype=np.csingle)             # <<<<<<<<<<<<<<
- *         complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs * (n_fft_coeffs / 2 + 1), dtype=np.csingle)
+ *         complex[::1] fft_w_coefficients = np.empty(n_fft_coeffs * (n_fft_coeffs / 2 + 1), dtype=complex)             # <<<<<<<<<<<<<<
+ *         complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs * (n_fft_coeffs / 2 + 1), dtype=complex)
  *         # Note that we can't use the same buffer for the input and output since
  */
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
@@ -3160,8 +3160,8 @@ static void __pyx_f_7bigtsne_11_matrix_mul_10matrix_mul_matrix_multiply_fft_2d(_
 
   /* "bigtsne/_matrix_mul/matrix_mul_fftw3.pyx":147
  *         fftwf_plan plan_dft, plan_idft
- *         complex[::1] fft_w_coefficients = np.empty(n_fft_coeffs * (n_fft_coeffs / 2 + 1), dtype=np.csingle)
- *         complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs * (n_fft_coeffs / 2 + 1), dtype=np.csingle)             # <<<<<<<<<<<<<<
+ *         complex[::1] fft_w_coefficients = np.empty(n_fft_coeffs * (n_fft_coeffs / 2 + 1), dtype=complex)
+ *         complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs * (n_fft_coeffs / 2 + 1), dtype=complex)             # <<<<<<<<<<<<<<
  *         # Note that we can't use the same buffer for the input and output since
  *         # we only write to the top quadrant of the in matrix - we'd need to
  */

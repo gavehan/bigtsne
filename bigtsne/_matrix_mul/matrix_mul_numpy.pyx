@@ -37,15 +37,15 @@ cdef void matrix_multiply_fft_1d(
         Py_ssize_t n_terms = w_coefficients.shape[1]
         Py_ssize_t n_fft_coeffs = kernel_tilde.shape[0]
 
-        complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs, dtype=np.csingle)
-        complex[::1] fft_w_coeffs = np.empty(n_fft_coeffs, dtype=np.csingle)
+        complex[::1] fft_kernel_tilde = np.empty(n_fft_coeffs, dtype=complex)
+        complex[::1] fft_w_coeffs = np.empty(n_fft_coeffs, dtype=complex)
         # Note that we can't use the same buffer for the input and output since
         # we only write to the first half of the vector - we'd need to
         # manually zero out the rest of the entries that were inevitably
         # changed during the IDFT, so it's faster to use two buffers, at the
         # cost of some memory
-        complex[::1] fft_in_buffer = np.zeros(n_fft_coeffs, dtype=np.csingle)
-        complex[::1] fft_out_buffer = np.zeros(n_fft_coeffs, dtype=np.csingle)
+        complex[::1] fft_in_buffer = np.zeros(n_fft_coeffs, dtype=complex)
+        complex[::1] fft_out_buffer = np.zeros(n_fft_coeffs, dtype=complex)
 
         Py_ssize_t d, i
 
@@ -96,15 +96,15 @@ cdef void matrix_multiply_fft_2d(
         Py_ssize_t n_fft_coeffs = kernel_tilde.shape[0]
         Py_ssize_t n_interpolation_points_1d = n_fft_coeffs / 2
 
-        complex[:, :] fft_w_coefficients = np.empty((n_fft_coeffs, (n_fft_coeffs / 2 + 1)), dtype=np.csingle)
-        complex[:, :] fft_kernel_tilde = np.empty((n_fft_coeffs, (n_fft_coeffs / 2 + 1)), dtype=np.csingle)
+        complex[:, :] fft_w_coefficients = np.empty((n_fft_coeffs, (n_fft_coeffs / 2 + 1)), dtype=complex)
+        complex[:, :] fft_kernel_tilde = np.empty((n_fft_coeffs, (n_fft_coeffs / 2 + 1)), dtype=complex)
         # Note that we can't use the same buffer for the input and output since
         # we only write to the top quadrant of the in matrix - we'd need to
         # manually zero out the rest of the entries that were inevitably
         # changed during the IDFT, so it's faster to use two buffers, at the
         # cost of some memory
-        float[:, ::1] fft_in_buffer = np.zeros((n_fft_coeffs, n_fft_coeffs), dtype=np.single)
-        float[:, ::1] fft_out_buffer = np.zeros((n_fft_coeffs, n_fft_coeffs), dtype=np.single)
+        float[:, ::1] fft_in_buffer = np.zeros((n_fft_coeffs, n_fft_coeffs), dtype=float)
+        float[:, ::1] fft_out_buffer = np.zeros((n_fft_coeffs, n_fft_coeffs), dtype=float)
 
         Py_ssize_t d, i, j, idx
 
