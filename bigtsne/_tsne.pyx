@@ -30,7 +30,7 @@ cdef extern from "math.h":
 cpdef float[:, ::1] compute_gaussian_perplexity(
     float[:, :] distances,
     float[:] desired_perplexities,
-    float perplexity_tol=1e-8,
+    float perplexity_tol=np.single(1e-8),
     Py_ssize_t max_iter=200,
     Py_ssize_t num_threads=1,
 ):
@@ -107,7 +107,7 @@ cpdef tuple estimate_positive_gradient_nn(
     float[:, ::1] embedding,
     float[:, ::1] reference_embedding,
     float[:, ::1] gradient,
-    float dof=1,
+    float dof=np.single(1.0),
     Py_ssize_t num_threads=1,
     bint should_eval_error=False,
 ):
@@ -173,8 +173,8 @@ cpdef float estimate_negative_gradient_bh(
     QuadTree tree,
     float[:, ::1] embedding,
     float[:, ::1] gradient,
-    float theta=0.5,
-    float dof=1,
+    float theta=np.single(0.5),
+    float dof=np.single(1.0),
     Py_ssize_t num_threads=1,
     bint pairwise_normalization=True,
 ):
@@ -360,8 +360,8 @@ cpdef float estimate_negative_gradient_fft_1d(
     float[::1] gradient,
     Py_ssize_t n_interpolation_points=3,
     Py_ssize_t min_num_intervals=10,
-    float ints_in_interval=1,
-    float dof=1,
+    float ints_in_interval=np.single(1.0),
+    float dof=np.single(1.0),
 ):
     cdef Py_ssize_t i, j, d, box_idx, n_samples = embedding.shape[0]
     cdef float y_max = -INFINITY, y_min = INFINITY
@@ -512,9 +512,9 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_1d(
     float[::1] reference_embedding,
     Py_ssize_t n_interpolation_points=3,
     Py_ssize_t min_num_intervals=10,
-    float ints_in_interval=1,
-    float dof=1,
-    float padding=0,
+    float ints_in_interval=np.single(1.0),
+    float dof=np.single(1.0),
+    float padding=np.single(0.0),
 ):
     cdef:
         Py_ssize_t i, j, d, box_idx
@@ -745,8 +745,8 @@ cpdef float estimate_negative_gradient_fft_2d(
     float[:, ::1] gradient,
     Py_ssize_t n_interpolation_points=3,
     Py_ssize_t min_num_intervals=10,
-    float ints_in_interval=1,
-    float dof=1,
+    float ints_in_interval=np.single(1.0),
+    float dof=np.single(1.0),
 ):
     cdef:
         Py_ssize_t i, j, d, box_idx
@@ -953,9 +953,9 @@ cpdef tuple prepare_negative_gradient_fft_interpolation_grid_2d(
     float[:, ::1] reference_embedding,
     Py_ssize_t n_interpolation_points=3,
     Py_ssize_t min_num_intervals=10,
-    float ints_in_interval=1,
-    float dof=1,
-    float padding=0,
+    float ints_in_interval=np.single(1.0),
+    float dof=np.single(1.0),
+    float padding=np.single(0.0),
 ):
     cdef:
         Py_ssize_t i, j, d, box_idx

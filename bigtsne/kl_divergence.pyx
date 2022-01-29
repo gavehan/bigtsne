@@ -63,8 +63,8 @@ cpdef float kl_divergence_approx_bh(
     int[:] indptr,
     float[:] P_data,
     float[:, ::1] embedding,
-    float theta=0.5,
-    float dof=1,
+    float theta=np.single(0.5),
+    float dof=np.single(1.0),
 ):
     """Compute the KL divergence using the Barnes-Hut approximation."""
     cdef:
@@ -102,10 +102,10 @@ cpdef float kl_divergence_approx_fft(
     int[:] indptr,
     float[:] P_data,
     float[:, ::1] embedding,
-    float dof=1,
+    float dof=np.single(1.0),
     Py_ssize_t n_interpolation_points=3,
     Py_ssize_t min_num_intervals=10,
-    float ints_in_interval=1,
+    float ints_in_interval=np.single(1.0),
 ):
     """Compute the KL divergence using the interpolation based approximation."""
     cdef:
