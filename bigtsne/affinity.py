@@ -463,8 +463,6 @@ def joint_probabilities_nn(
         "point-wise",
     ), f"Unrecognized normalization scheme `{normalization}`."
 
-    print(f"neighbors: {neighbors.dtype} / ditances: {distances.dtype}")
-
     n_samples, k_neighbors = distances.shape
 
     if n_reference_samples is None:
