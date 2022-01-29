@@ -7,10 +7,6 @@
 # cython: language_level=3
 cimport numpy as np
 
-
-np.import_array()
-
-
 from .quad_tree cimport QuadTree
 
 
@@ -19,9 +15,9 @@ ctypedef fused sparse_index_type:
     np.int64_t
 
 
-cpdef np.ndarray compute_gaussian_perplexity(
-    np.ndarray distances,
-    np.ndarray desired_perplexities,
+cpdef float[:, ::1] compute_gaussian_perplexity(
+    float[:, :] distances,
+    float[:] desired_perplexities,
     float perplexity_tol=*,
     Py_ssize_t max_iter=*,
     Py_ssize_t num_threads=*,

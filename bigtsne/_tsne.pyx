@@ -10,15 +10,8 @@ from cython.parallel import prange, parallel
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from libc.stdlib cimport malloc, free
 
-
-np.import_array()
-
-
 from .quad_tree cimport QuadTree, Node, is_duplicate
 from ._matrix_mul.matrix_mul cimport matrix_multiply_fft_1d, matrix_multiply_fft_2d
-
-
-cdef float EPSILON = np.finfo(float).eps
 
 
 cdef extern from "math.h":
@@ -31,23 +24,25 @@ cdef extern from "math.h":
     float INFINITY
 
 
-cpdef np.ndarray compute_gaussian_perplexity(
-    np.ndarray distances,
-    np.ndarray desired_perplexities,
+cpdef float[:, ::1] compute_gaussian_perplexity(
+    float[:, :] distances,
+    float[:] desired_perplexities,
     float perplexity_tol=np.single(1e-8),
     Py_ssize_t max_iter=200,
     Py_ssize_t num_threads=1,
 ):
-    assert distances.dtype == float and desired_perplexities.dtype == float
-    cdef Py_ssize_t n_samples = distances.shape[0]
-    cdef Py_ssize_t n_scales = desired_perplexities.shape[0]
-    cdef Py_ssize_t k_neighbors = distances.shape[1]
-    cdef np.ndarray P = np.zeros_like(distances, dtype=float, order="C")
-    cdef np.ndarray multiscale_P = np.zeros((n_samples, n_scales, k_neighbors), dtype=float)
-    cdef np.ndarray tau = np.ones((n_samples, n_scales), dtype=float)
-    cdef Py_ssize_t i, j, h, iteration
-    cdef np.ndarray desired_entropies = np.log(desired_perplexities)
-    cdef float min_tau, max_tau, sum_Pi, sum_PiDj, entropy, entropy_diff, sqrt_tau
+    cdef:
+        Py_ssize_t n_samples = distances.shape[0]
+        Py_ssize_t n_scales = desired_perplexities.shape[0]
+        Py_ssize_t k_neighbors = distances.shape[1]
+        float[:, ::1] P = np.zeros_like(distances, dtype=float, order="C")
+        float[:, :, ::1] multiscale_P = np.zeros((n_samples, n_scales, k_neighbors), dtype=float)
+        float[:, ::1] tau = np.ones((n_samples, n_scales), dtype=float)
+
+        Py_ssize_t i, j, h, iteration
+        float[:] desired_entropies = np.log(desired_perplexities)
+
+        float min_tau, max_tau, sum_Pi, sum_PiDj, entropy, entropy_diff, sqrt_tau
 
     if num_threads < 1:
         num_threads = 1
