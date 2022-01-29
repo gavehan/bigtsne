@@ -463,6 +463,8 @@ def joint_probabilities_nn(
         "point-wise",
     ), f"Unrecognized normalization scheme `{normalization}`."
 
+    print(f"neighbors: {type(neighbors)} / ditances: {type(distances)}")
+
     n_samples, k_neighbors = distances.shape
 
     if n_reference_samples is None:
@@ -814,6 +816,8 @@ class MultiscaleMixture(Affinities):
             log.info("KNN index provided. Ignoring KNN-related parameters.")
 
         self.__neighbors, self.__distances = self.knn_index.build()
+
+        print(f"neighbors: {type(self.__neighbors)} / ditances: {type(self.__distances)}")
 
         with utils.Timer("Calculating affinity matrix...", verbose):
             self.P = self._calculate_perplexities(

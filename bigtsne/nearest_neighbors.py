@@ -771,6 +771,7 @@ class IVFSQ(KNNIndex):
         # Skip first entry, which is always the point itself and square root disatances
         distances = np.sqrt(np.delete(distances, 0, 1))
         indices = np.delete(indices, 0, 1)
+        print(f"indices: {type(indices)} / ditances: {type(distances)}")
 
         # Stop timer
         timer.__exit__()
